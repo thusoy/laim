@@ -39,9 +39,8 @@ def test_smtp_delivery_to_handler():
         message = Message()
         message['From'] = 'foo@bar.com'
         message['To'] = 'bar@foo.com'
-        message['Subject'] = 'Test subject'
         message.set_payload('Hello, laim!')
-        smtp.sendmail('foo@bar.com', 'bar@foo.com', message.as_string())
+        smtp.send_message(message)
 
     handled_event.wait(2)
 
