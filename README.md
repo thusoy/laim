@@ -58,3 +58,18 @@ Laim is not written for high throughput, but does do some basic queuing to make 
 Laim will bind to localhost port 25 to handle incoming SMTP, and will by itself only filter out non-plaintext messages. This means that if an attacker gets access to the machine, they can send arbitrary messages to your handler.
 
 The service will start as root, but drops privileges once it has bound to the port and opened a handle to the config file.
+
+
+## Local testing
+
+Apart from the test suite you can use the included `./devhandler.py` to run laim on port 2525 for testing. To send mail you can modify the file in `smtp-session.txt`, which can be piped to netcat to send a sample mail:
+
+    $ nc localhost 2525 < smtp-session.txt
+
+To send lots of mail to test the queuing system or simple load testing:
+
+    $ count=0; while :; do echo "Sending $count"; sed s/COUNT/$count/ smtp-session.txt | nc localhost 2525 || break; count=$((count+1)); done; echo "Sent $count mails"
+
+Laim stops gracefully on SIGINT and SIGTERM, so you can stop the handler from a third shell and observe that it shuts down cleanly:
+
+    $ pkill -f devhandler.py

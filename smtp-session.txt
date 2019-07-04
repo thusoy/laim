@@ -1,0 +1,13 @@
+EHLO foo.bar.com
+MAIL FROM: foo@bar.com SMTPUTF8
+RCPT TO: bar@foo.com
+DATA
+From: foo☃️@bar.com
+To: bar@foo.com
+Date: Thu, 04 Jul 2019 17:07:14 +0200
+Subject: Test ☃️
+
+Hiiii! Current count: COUNT
+
+.
+QUIT
