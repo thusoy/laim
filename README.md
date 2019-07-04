@@ -1,5 +1,7 @@
 # Laim (pronounced like lime, anagram of mail)
 
+[![Build Status](https://travis-ci.org/thusoy/laim.svg?branch=master)](https://travis-ci.org/thusoy/laim)
+
 Flexible library to handle local SMTP on servers.
 
 Modern &ast;nix servers use mail for a lot of reporting. Cron uses mail to notify about failing jobs, unattended-upgrades sends reports by mail, and sudo can send mail when invoked. Having a standardized way to report somewhere is great, but having to run a full-blown email infrastructure to receive these messages is hard.
