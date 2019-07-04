@@ -14,3 +14,4 @@ pyparsing==2.4.0
 six==1.12.0
 wcwidth==0.1.7
 zipp==0.5.1
+pathlib2==2.3.4;python_version<"3.6"
