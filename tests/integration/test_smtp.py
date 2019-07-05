@@ -11,7 +11,7 @@ from laim import Laim
 pytestmark = pytest.mark.integration
 
 
-def test_smtp_delivery_to_handler():
+def test_smtp_delivery_to_handler(temp_config):
     handled_event = threading.Event()
     lock = threading.Lock()
     received_sender = None
@@ -29,7 +29,7 @@ def test_smtp_delivery_to_handler():
             self.stop()
 
     with mock.patch('laim.drop_privileges'):
-        handler = Handler(port=2525)
+        handler = Handler(port=2525, config_file=temp_config)
 
     def start_handler():
         handler.run()

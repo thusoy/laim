@@ -6,7 +6,10 @@ from collections import namedtuple
 from email import message_from_string
 from smtpd import SMTPServer
 
+import yaml
 from aiosmtpd.controller import Controller
+
+from .util import drop_privileges
 
 
 TaskArguments = namedtuple('TaskArguments', 'sender receiver data')
@@ -14,11 +17,20 @@ TaskArguments = namedtuple('TaskArguments', 'sender receiver data')
 
 class Laim:
 
-    def __init__(self, port=25, user='laim', max_queue_size=50):
+    def __init__(
+            self,
+            port=25,
+            user='laim',
+            max_queue_size=50,
+            config_file='/etc/laim/conf.yml',
+    ):
         self.queue = queue.Queue(max_queue_size)
         handler = LaimHandler(self.queue)
         self.controller = Controller(handler, hostname='127.0.0.1', port=port)
-        drop_privileges(user)
+        with open(config_file, 'r') as config_fh:
+            drop_privileges(user)
+            self.config = yaml.safe_load(config_fh)
+
         signal.signal(signal.SIGTERM, self._signalhandler)
         signal.signal(signal.SIGINT, self._signalhandler)
         self.stop_event = threading.Event()
