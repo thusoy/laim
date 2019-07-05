@@ -1,5 +1,4 @@
 import os
-import pwd
 import queue
 import signal
 import threading
@@ -81,13 +80,3 @@ class LaimHandler:
                 return '552 Exceeded storage allocation'
 
         return '250 OK'
-
-
-def drop_privileges(user):
-    pwd_details = pwd.getpwnam(user)
-
-    # Remove group privileges
-    os.setgroups([])
-
-    os.setgid(pwd_details.pw_gid)
-    os.setuid(pwd_details.pw_uid)

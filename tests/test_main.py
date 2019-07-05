@@ -4,7 +4,7 @@ from laim import Laim
 
 
 def test_drops_privileges():
-    with mock.patch('laim.os') as os_mock:
+    with mock.patch('laim.util.os') as os_mock:
         with mock.patch('pwd.getpwnam') as getpwnam_mock:
             getpwnam_mock.return_value.pw_uid = 1337
             getpwnam_mock.return_value.pw_gid = 2448
