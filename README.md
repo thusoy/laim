@@ -27,10 +27,11 @@ class SlackHandler(Laim):
         self.channel_id = self.config['SLACK_CHANNEL_ID']
         self.hostname = socket.gethostname()
 
-    def handle_message(self, recipient, message):
+    def handle_message(self, sender, receiver, message):
         self.session.post('https://slack.com/api/chat.postMessage', json={
             'channel': self.channel_id,
-            'text': '%s received mail for %s:\n%s' % (self.hostname, recipient, message)    
+            'text': '%s received mail for %s:\n%s' % (
+                self.hostname, receiver, message.get_payload()),
         })
 
 if __name__ == '__main__':
@@ -43,7 +44,7 @@ A couple of things are worth noting here that laim helped out with.
 
 ## Configuration
 
-Laim reads the root-only readable yaml file /etc/laim.conf on startup, and saves the contents to `self.config`. This makes it easy to add arbitrary configuration you need in your handler, that will be read in a secure way.
+Laim reads the root-only readable yaml file `/etc/laim/conf.yml` on startup, and saves the contents to `self.config`. This makes it easy to add arbitrary configuration you need in your handler, that will be read in a secure way.
 
 Note that until the line calling `super().__init__()`, the script was running as root. After that it dropped privileges to the user 'laim'.
 
