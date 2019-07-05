@@ -27,6 +27,8 @@ class Laim:
         self.queue = queue.Queue(max_queue_size)
         handler = LaimHandler(self.queue)
         self.controller = Controller(handler, hostname='127.0.0.1', port=port)
+        # Start the controller while we have the privileges to bind the port
+        self.controller.start()
         with open(config_file, 'r') as config_fh:
             drop_privileges(user)
             self.config = yaml.safe_load(config_fh)
@@ -48,7 +50,6 @@ class Laim:
         )
         worker_thread.start()
 
-        self.controller.start()
         self.stop_event.wait()
         self.controller.stop()
 
