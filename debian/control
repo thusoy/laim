@@ -1,0 +1,24 @@
+Source: laim
+Section: python
+Priority: extra
+Maintainer: Tarjei Husøy <apt@thusoy.com>
+Build-Depends:
+    debhelper (>= 9),
+    python3,
+    dh-virtualenv (>= 0.7),
+    dh-systemd (>= 1.5)
+Standards-Version: 3.9.5
+
+Package: laim
+Architecture: any
+Provides: mail-transport-agent
+Conflicts: mail-transport-agent
+Replaes: mail-transport-agent
+Pre-Depends: dpkg (>= 1.16.1), ${misc:Pre-Depends}
+Depends:
+    ${python:Depends},
+    ${misc:Depends},
+    adduser,
+    python3
+Description: Local SMTP helper
+ Local SMTP helper

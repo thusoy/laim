@@ -1,0 +1,4 @@
+# Used by the debian package. Pinned dependencies for reproducible builds.
+aiosmtpd==1.2
+atpublic==1.0
+pyyaml==5.1.1

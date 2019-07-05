@@ -20,3 +20,6 @@ trim_trailing_whitespace = false
 
 [smtp-session.txt]
 end_of_line = crlf
+
+[debian/rules]
+indent_style = tabs

@@ -106,3 +106,4 @@ venv.bak/
 
 # Laim stuff
 artifacts/
+debian/changelog

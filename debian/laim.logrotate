@@ -1,0 +1,8 @@
+/var/log/laim/laim.log {
+    rotate 7
+    daily
+    compress
+    missingok
+    notifempty
+    create 0640 laim adm
+}

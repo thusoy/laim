@@ -1,0 +1,90 @@
+#!/bin/sh
+
+set -eu
+
+LOG_DIR=/var/log/laim
+CONF_DIR=/etc/laim
+
+main () {
+    create_user
+    create_log_dir
+    add_default_config
+}
+
+create_user () {
+    adduser \
+        --system \
+        --home "$CONF_DIR" \
+        --no-create-home \
+        --disabled-login \
+        --group \
+        --quiet \
+        laim
+}
+
+create_log_dir () {
+    mkdir -p "$LOG_DIR"
+    touch "$LOG_DIR/laim.log"
+    chmod 640 "$LOG_DIR/"*
+    chown -R laim:adm "$LOG_DIR"
+    chmod 755 "$LOG_DIR"
+}
+
+add_default_config () {
+    mkdir -p "$CONF_DIR"
+
+    local config_file="$CONF_DIR/conf.yml"
+    local handler_file="$CONF_DIR/handler.py"
+    old_umask=$(umask)
+
+    umask 077
+
+    # Don't tamper with the config file if it already exists
+    if [ ! -f "$config_file" ]; then
+        cat > "$config_file" <<EOF
+# Laim config file. Should be in YAML.
+
+# Add any keys you want available to your handler here, it'll be loaded
+# automatically.
+# Example:
+# slack-token: FOOTOKEN
+# This will be made available to your handler as self.config['slack-token']
+EOF
+    fi
+
+    umask 022
+    if [ ! -f "$handler_file" ]; then
+        cat > "$handler_file" <<EOF
+'''
+This is the default laim handler implementation. Write your handler here.
+'''
+
+import os
+
+from laim import Laim
+
+
+def main():
+    handler = DefaultHandler()
+    handler.run()
+
+
+class DefaultHandler(Laim):
+    def handle_message(self, sender, receiver, message):
+        print("sender=%r receiver=%r message='''%s'''" % (
+            sender, receiver, message.get_payload()))
+
+
+if __name__ == '__main__':
+    main()
+EOF
+    fi
+
+    umask "$old_umask"
+}
+
+main
+
+set +eu
+
+#DEBHELPER#

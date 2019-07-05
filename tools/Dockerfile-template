@@ -1,0 +1,18 @@
+FROM debian:DISTRO-slim
+
+WORKDIR /build
+
+RUN apt-get update && apt-get install -y \
+    debhelper \
+    dh-virtualenv \
+    dh-systemd \
+    git \
+    python3
+
+COPY . /build
+
+RUN git config --global user.name "Tarjei Husøy (automated)" && git config --global user.email "apt@thusoy.com"
+
+RUN dpkg-buildpackage -us -uc \
+    && mkdir -p dist \
+    && cp ../*.deb dist

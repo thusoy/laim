@@ -1,0 +1,10 @@
+[Unit]
+Description=Local SMTP helper
+After=network.target
+
+[Service]
+ExecStart=/opt/venvs/laim/bin/python /etc/laim/handler.py
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
