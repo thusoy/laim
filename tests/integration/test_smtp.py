@@ -4,7 +4,11 @@ from email.message import Message
 from unittest import mock
 from smtplib import SMTP
 
+import pytest
+
 from laim import Laim
+
+pytestmark = pytest.mark.integration
 
 
 def test_smtp_delivery_to_handler():
