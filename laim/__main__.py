@@ -4,13 +4,19 @@ laim to sendmail compatibility interface.
 
 import argparse
 import email.parser
+import os
+import pwd
 import sys
 from email.policy import SMTPUTF8, SMTP
 
 
 def main(argv=None):
     args = parse_args(argv)
-    sendmail(args)
+    try:
+        sendmail(args)
+    except Exception as e:
+        sys.stderr.write('Failed to send mail: %s' % e)
+        sys.exit(1)
 
 
 def mailq(prog='mailq'):
@@ -27,7 +33,19 @@ def sendmail(args):
     if args.bi:
         return newaliases('sendmail')
     message = read_message(args.B, args.i)
-    send_mail(None, None, message)
+    sender = None
+    recipients = set(args.recipients)
+    if 'From' not in message:
+        sender = args.r or pwd.getpwuid(os.getuid()).pw_name
+        if args.F:
+            message['From'] = '"%s" <%s>' % (args.F, sender)
+        else:
+            message['From'] = sender
+
+    if 'To' not in message:
+        raise ValueError("Message doesn't have a To header")
+
+    send_mail(sender, list(recipients), message)
 
 
 def read_message(body_type, stop_on_dot):
@@ -54,11 +72,17 @@ def parse_args(argv=None):
         help='List the mail queue')
     parser.add_argument('-bi', '-I', action='store_true',
         help='Initialize the alias database. Ignored.')
-    parser.add_argument('-B', choices=('7BIT', '8BITMIME'),
-        help='Set the message body type')
+    parser.add_argument('-B', choices=('7BIT', '8BITMIME'), default='7BIT',
+        help='Set the message body type. Default: %(default)s')
     parser.add_argument('-i', '-oi', action='store_false', default=True,
         help="When reading a message from standard input, don't treat a "
         "line with only a .  character  as the end of input.")
+    parser.add_argument('-F', help='Set the full name of the sender. Only '
+        'used for messages without a From: header')
+    parser.add_argument('-r', '-f', help='Set the envelope sender.')
+    parser.add_argument('-t', action='store_true', help='Extract recipients '
+        'from message headers. These are added to any recipients specified on '
+        'the command line.')
 
     args, unparsed = parser.parse_known_args(argv)
     if unparsed:
