@@ -1,0 +1,3 @@
+slack-token: <insert-your-token-here>
+# You can find the channel id by inspecting the url in the slack webapp
+slack-channel-id: <insert-channel-id-here>
