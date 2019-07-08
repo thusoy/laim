@@ -3,6 +3,7 @@ import textwrap
 
 import pytest
 
+
 @pytest.fixture
 def temp_config():
     with tempfile.NamedTemporaryFile() as config:

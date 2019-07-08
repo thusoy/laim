@@ -4,11 +4,18 @@ laim to sendmail compatibility interface.
 
 import argparse
 import email.parser
-from email.headerregistry import AddressHeader
+import logging
 import os
 import pwd
 import sys
+import traceback
+from email.headerregistry import AddressHeader
 from email.policy import SMTPUTF8, SMTP
+
+from laim._version import __version__
+
+
+_logger = logging.getLogger('laim')
 
 
 def main(argv=None):
@@ -16,7 +23,8 @@ def main(argv=None):
     try:
         sendmail(args)
     except Exception as e:
-        sys.stderr.write('Failed to send mail: %s' % e)
+        _logger.debug(traceback.format_exc())
+        _logger.warning('Failed to send mail: %s', e)
         sys.exit(1)
 
 
@@ -109,12 +117,24 @@ def parse_args(argv=None):
     parser.add_argument('-t', action='store_true', help='Extract recipients '
         'from message headers. These are added to any recipients specified on '
         'the command line.')
+    parser.add_argument('-v', action='store_true', help='More verbose logging')
 
     args, unparsed = parser.parse_known_args(argv)
     if unparsed:
-        sys.stderr.write('ignoring the following arguments: %s\n' %
+        _logger.debug('laim: ignoring the following arguments: %s',
             ' '.join(unparsed))
+
+    configure_logger(logging.DEBUG if args.v else logging.INFO)
+    _logger.debug('laim version %s' % __version__)
+
     return args
+
+
+def configure_logger(level):
+    handler = logging.StreamHandler()
+    handler.setLevel(level)
+    _logger.addHandler(handler)
+    _logger.setLevel(level)
 
 
 if __name__ == '__main__':
