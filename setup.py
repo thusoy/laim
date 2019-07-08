@@ -17,6 +17,9 @@ with open(version_file) as fh:
     version_match = re.match(r"__version__ = '(\d\.\d.\d.*)'", version_file_contents)
     version = version_match.group(1)
 
+with open(os.path.join(os.path.dirname(__file__), 'README.md')) as fh:
+    long_description = fh.read()
+
 setup(
     name='laim',
     version=version,
@@ -24,6 +27,8 @@ setup(
     author_email='git@thusoy.com',
     url='https://github.com/thusoy/laim',
     description="Local SMTP helper",
+    long_description=long_description,
+    long_description_content_type='text/markdown',
     packages=find_packages(),
     install_requires=install_requires,
     entry_points={
