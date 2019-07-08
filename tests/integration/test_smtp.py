@@ -14,15 +14,15 @@ def test_sendmail_delivery_to_handler(temp_config):
     handled_event = threading.Event()
     lock = threading.Lock()
     received_sender = None
-    received_receiver = None
+    received_recipients = None
     received_message = None
 
     class Handler(Laim):
-        def handle_message(self, sender, receiver, message):
-            nonlocal received_sender, received_receiver, received_message
+        def handle_message(self, sender, recipients, message):
+            nonlocal received_sender, received_recipients, received_message
             with lock:
                 received_sender = sender
-                received_receiver = receiver
+                received_recipients = recipients
                 received_message = message
             handled_event.set()
             self.stop()
@@ -59,5 +59,5 @@ def test_sendmail_delivery_to_handler(temp_config):
 
     with lock:
         assert received_sender == 'foo@bar.com'
-        assert received_receiver == 'bar@foo.com'
+        assert received_recipients == ['bar@foo.com']
         assert received_message.get_payload() == 'Hello, laim!'

@@ -1,6 +1,8 @@
+import asyncio
+from queue import Queue
 from unittest import mock
 
-from laim import Laim
+from laim import Laim, LaimHandler
 
 
 def test_drops_privileges(temp_config):
@@ -22,3 +24,15 @@ def test_loads_config(temp_config):
         with mock.patch('laim.Controller'):
             handler = Laim(config_file=temp_config)
     assert handler.config['some-secret'] == 'foo secret'
+
+
+def test_full_queue():
+    queue = Queue(2)
+    handler = LaimHandler(queue)
+    envelope = mock.Mock()
+    envelope.rcpt_tos = ['foo']
+    loop = asyncio.get_event_loop()
+    run = loop.run_until_complete
+    run(handler.handle_DATA(None, None, envelope)) == '250 OK'
+    run(handler.handle_DATA(None, None, envelope)) == '250 OK'
+    run(handler.handle_DATA(None, None, envelope)) == '552 Exceeded storage allocation'

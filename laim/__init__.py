@@ -12,7 +12,7 @@ from aiosmtpd.controller import Controller
 from .util import drop_privileges
 
 
-TaskArguments = namedtuple('TaskArguments', 'sender receiver data')
+TaskArguments = namedtuple('TaskArguments', 'sender recipients data')
 
 
 class Laim:
@@ -38,7 +38,7 @@ class Laim:
         self.stop_event = threading.Event()
 
 
-    def handle_message(self, sender, receiver, message):
+    def handle_message(self, sender, recipients, message):
         raise NotImplementedError('The handler must implement handle_message')
 
 
@@ -73,7 +73,7 @@ class Laim:
 
             message_string = task_args.data.decode('utf-8')
             message = message_from_string(message_string)
-            self.handle_message(task_args.sender, task_args.receiver, message)
+            self.handle_message(task_args.sender, task_args.recipients, message)
 
 
 class LaimHandler:
@@ -84,12 +84,11 @@ class LaimHandler:
     async def handle_DATA(self, server, session, envelope):
         mail_from = envelope.mail_from
         data = envelope.content
-        for receiver in envelope.rcpt_tos:
-            try:
-                self.queue.put_nowait(TaskArguments(mail_from, receiver, data))
-            except queue.Full:
-                print('Queue full, discarding message from %s to %s' % (
-                    mail_from, receiver))
-                return '552 Exceeded storage allocation'
+        try:
+            self.queue.put_nowait(TaskArguments(mail_from, envelope.rcpt_tos, data))
+        except queue.Full:
+            print('Queue full, discarding message from %s to %s' % (
+                mail_from, ', '.join(envelope.rcpt_tos)))
+            return '552 Exceeded storage allocation'
 
         return '250 OK'

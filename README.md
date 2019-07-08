@@ -27,11 +27,11 @@ class SlackHandler(Laim):
         self.channel_id = self.config['SLACK_CHANNEL_ID']
         self.hostname = socket.gethostname()
 
-    def handle_message(self, sender, receiver, message):
+    def handle_message(self, sender, recipients, message):
         self.session.post('https://slack.com/api/chat.postMessage', json={
             'channel': self.channel_id,
             'text': '%s received mail for %s:\n%s' % (
-                self.hostname, receiver, message.get_payload()),
+                self.hostname, ', '.join(recipients), message.get_payload()),
         })
 
 if __name__ == '__main__':
@@ -51,7 +51,7 @@ Note that until the line calling `super().__init__()`, the script was running as
 
 ## Async
 
-Laim is not written for high throughput, but does do some basic queuing to make sure you can handle a message synchronously without blocking the reception of other messages. This is done by running the SMTP receiver on one thread, and the handler on another. Messages to be delivered are passed to the handler on a bounded in-memory queue, which prevents arbitrarily high memory usage if the handler fails to process messages fast enough by dropping new messages (this event is logged by laim).
+Laim is not written for high throughput, but does do some basic queuing to make sure you can handle a message synchronously without blocking the reception of other messages. This is done by running the SMTP listener on one thread, and the handler on another. Messages to be delivered are passed to the handler on a bounded in-memory queue, which prevents arbitrarily high memory usage if the handler fails to process messages fast enough by dropping new messages (this event is logged by laim).
 
 
 ## Security considerations

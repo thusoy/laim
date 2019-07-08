@@ -70,9 +70,9 @@ def main():
 
 
 class DefaultHandler(Laim):
-    def handle_message(self, sender, receiver, message):
-        print("sender=%r receiver=%r message='''%s'''" % (
-            sender, receiver, message.get_payload()))
+    def handle_message(self, sender, recipients, message):
+        print("sender=%r recipients=%r message='''%s'''" % (
+            sender, ','.join(recipients), message.get_payload()))
 
 
 if __name__ == '__main__':
