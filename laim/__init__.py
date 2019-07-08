@@ -98,8 +98,13 @@ class Laim:
                 'subject': message.get('subject'),
                 'msg_defects': ','.join(e.__class__.__name__ for e in message.defects),
             }
-            self.handle_message(task_args.sender, task_args.recipients, message)
-            log(log_context, start_time)
+            try:
+                self.handle_message(task_args.sender, task_args.recipients, message)
+            except Exception as e:
+                log_context['action'] = 'handle-message-error'
+                log_context['error'] = e
+            finally:
+                log(log_context, start_time)
 
 
 class LaimHandler:
