@@ -124,12 +124,13 @@ def parse_args(argv=None):
     parser.add_argument('-v', action='store_true', help='More verbose logging')
 
     args, unparsed = parser.parse_known_args(argv)
+
+    configure_logger(logging.DEBUG if args.v else logging.INFO)
+    _logger.debug('laim version %s', __version__)
+
     if unparsed:
         _logger.debug('laim: ignoring the following arguments: %s',
             ' '.join(unparsed))
-
-    configure_logger(logging.DEBUG if args.v else logging.INFO)
-    _logger.debug('laim version %s' % __version__)
 
     return args
 
