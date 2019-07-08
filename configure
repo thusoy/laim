@@ -22,7 +22,7 @@ sanity_check () {
 
 create_virtualenv () {
     virtualenv venv -p $(which python3)
-    ./venv/bin/pip install -U pip
+    ./venv/bin/pip install -U pip setuptools wheel
 }
 
 install_requirements () {
