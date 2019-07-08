@@ -1,17 +1,16 @@
 import threading
 import time
-from email.message import Message
 from unittest import mock
-from smtplib import SMTP
 
 import pytest
 
 from laim import Laim
+from laim.__main__ import main
 
 pytestmark = pytest.mark.integration
 
 
-def test_smtp_delivery_to_handler(temp_config):
+def test_sendmail_delivery_to_handler(temp_config):
     handled_event = threading.Event()
     lock = threading.Lock()
     received_sender = None
@@ -39,12 +38,20 @@ def test_smtp_delivery_to_handler(temp_config):
     # Wait for the handler to start and bind to the port
     time.sleep(1)
 
-    with SMTP('127.0.0.1', port=2525) as smtp:
-        message = Message()
-        message['From'] = 'foo@bar.com'
-        message['To'] = 'bar@foo.com'
-        message.set_payload('Hello, laim!')
-        smtp.send_message(message)
+    with mock.patch('laim.__main__.SMTP_PORT', 2525):
+        stdin_mock = mock.Mock()
+        stdin_mock.buffer = [
+            b'From: foo@bar.com\n',
+            b'To: bar@foo.com\n',
+            b'\n',
+            b'Hello, laim!\n',
+        ]
+        with mock.patch('laim.__main__.sys.stdin', stdin_mock):
+            try:
+                main([])
+            except:
+                handler.stop()
+                pytest.fail()
 
     handled_event.wait(2)
 

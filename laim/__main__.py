@@ -7,12 +7,16 @@ import email.parser
 import logging
 import os
 import pwd
+import smtplib
 import sys
 import traceback
 from email.headerregistry import AddressHeader
 from email.policy import SMTPUTF8, SMTP
 
 from laim._version import __version__
+
+# Extracted as a constant to make it easy to override for tests
+SMTP_PORT = 25
 
 
 _logger = logging.getLogger('laim')
@@ -95,8 +99,8 @@ def read_message(body_type, stop_on_dot):
 
 
 def send_mail(sender, recipients, message):
-    with SMTP('127.0.0.1', port=25, timeout=3) as smtp:
-        smtp.send_message(message, from_addr=sender, to_addrs=recipients)
+    with smtplib.SMTP('127.0.0.1', port=SMTP_PORT, timeout=3) as smtp:
+        smtp.send_message(message, from_addr=sender, to_addrs=recipients or None)
 
 
 def parse_args(argv=None):
