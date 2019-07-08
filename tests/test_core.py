@@ -29,10 +29,13 @@ def test_loads_config(temp_config):
 def test_full_queue():
     queue = Queue(2)
     handler = LaimHandler(queue)
-    envelope = mock.Mock()
+    envelope = mock.MagicMock()
     envelope.rcpt_tos = ['foo']
     loop = asyncio.get_event_loop()
     run = loop.run_until_complete
-    run(handler.handle_DATA(None, None, envelope)) == '250 OK'
-    run(handler.handle_DATA(None, None, envelope)) == '250 OK'
-    run(handler.handle_DATA(None, None, envelope)) == '552 Exceeded storage allocation'
+    def add_to_queue():
+        return run(handler.handle_DATA(None, mock.Mock(), envelope))
+
+    add_to_queue() == '250 OK'
+    add_to_queue() == '250 OK'
+    add_to_queue() == '552 Exceeded storage allocation'

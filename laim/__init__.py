@@ -2,6 +2,7 @@ import os
 import queue
 import signal
 import threading
+import time
 from collections import namedtuple
 from email import message_from_string
 from smtpd import SMTPServer
@@ -11,6 +12,7 @@ import yaml
 from aiosmtpd.controller import Controller
 
 from .util import drop_privileges
+from .log import log, format_message_structure
 
 
 TaskArguments = namedtuple('TaskArguments', 'sender recipients data')
@@ -35,6 +37,12 @@ class Laim:
 
         # Let systemd we're done binding to the network socket
         self.notifier.notify('READY=1')
+        log({
+            'action': 'started',
+            'port': port,
+            'max_queue_size': max_queue_size,
+            'config_file': config_file,
+        })
 
         with open(config_file, 'r') as config_fh:
             drop_privileges(user)
@@ -78,9 +86,20 @@ class Laim:
                     break
                 continue
 
+            start_time = time.time()
             message_string = task_args.data.decode('utf-8')
             message = message_from_string(message_string)
+            log_context = {
+                'action': 'handle-message',
+                'parse_time': '%.3fs' % (time.time() - start_time),
+                'sender': task_args.sender,
+                'recipients': ','.join(task_args.recipients),
+                'msg_structure': format_message_structure(message),
+                'subject': message.get('subject'),
+                'msg_defects': ','.join(e.__class__.__name__ for e in message.defects),
+            }
             self.handle_message(task_args.sender, task_args.recipients, message)
+            log(log_context, start_time)
 
 
 class LaimHandler:
@@ -89,13 +108,23 @@ class LaimHandler:
 
 
     async def handle_DATA(self, server, session, envelope):
+        start_time = time.time()
         mail_from = envelope.mail_from
         data = envelope.content
+        recipients = envelope.rcpt_tos
+        log_context = {
+            'action': 'queued-message',
+            'mail_from': mail_from,
+            'recipients': ','.join(recipients),
+            'msg_size': len(data),
+            'client': session.host_name,
+        }
         try:
-            self.queue.put_nowait(TaskArguments(mail_from, envelope.rcpt_tos, data))
+            self.queue.put_nowait(TaskArguments(mail_from, recipients, data))
+            log(log_context, start_time)
         except queue.Full:
-            print('Queue full, discarding message from %s to %s' % (
-                mail_from, ', '.join(envelope.rcpt_tos)))
+            log_context['action'] = 'queue-full'
+            log(log_context, start_time)
             return '552 Exceeded storage allocation'
 
         return '250 OK'
