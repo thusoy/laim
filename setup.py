@@ -8,6 +8,7 @@ from setuptools import setup, find_packages
 install_requires = [
     'aiosmtpd>=1.2',
     'pyyaml',
+    'sdnotify',
 ]
 
 version_file = os.path.join(os.path.dirname(__file__), 'laim', '_version.py')

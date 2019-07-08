@@ -6,6 +6,7 @@ from collections import namedtuple
 from email import message_from_string
 from smtpd import SMTPServer
 
+import sdnotify
 import yaml
 from aiosmtpd.controller import Controller
 
@@ -25,10 +26,16 @@ class Laim:
             config_file='/etc/laim/conf.yml',
     ):
         self.queue = queue.Queue(max_queue_size)
+        self.notifier = sdnotify.SystemdNotifier()
         handler = LaimHandler(self.queue)
         self.controller = Controller(handler, hostname='127.0.0.1', port=port)
+
         # Start the controller while we have the privileges to bind the port
         self.controller.start()
+
+        # Let systemd we're done binding to the network socket
+        self.notifier.notify('READY=1')
+
         with open(config_file, 'r') as config_fh:
             drop_privileges(user)
             self.config = yaml.safe_load(config_fh)

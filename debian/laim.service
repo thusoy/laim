@@ -6,6 +6,7 @@ Wants=network-online.target
 [Service]
 # Turn off buffered output to make sure logs appear in a timely manner
 Environment=PYTHONUNBUFFERED=1
+Type=notify
 ExecStart=/opt/venvs/laim/bin/python /etc/laim/handler.py
 Restart=on-failure
 
