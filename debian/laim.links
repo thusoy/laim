@@ -1,0 +1,3 @@
+opt/venvs/laim/bin/sendmail usr/sbin/sendmail
+opt/venvs/laim/bin/mailq usr/bin/mailq
+opt/venvs/laim/bin/newaliases usr/bin/newaliases
