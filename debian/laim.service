@@ -4,6 +4,8 @@ After=network-online.target nss-lookup.target
 Wants=network-online.target
 
 [Service]
+# Turn off buffered output to make sure logs appear in a timely manner
+Environment=PYTHONUNBUFFERED=1
 ExecStart=/opt/venvs/laim/bin/python /etc/laim/handler.py
 Restart=on-failure
 
