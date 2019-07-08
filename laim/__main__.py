@@ -4,6 +4,7 @@ laim to sendmail compatibility interface.
 
 import argparse
 import email.parser
+from email._header_value_parser import get_address_list
 import os
 import pwd
 import sys
@@ -34,7 +35,7 @@ def sendmail(args):
         return newaliases('sendmail')
     message = read_message(args.B, args.i)
     sender = None
-    recipients = set(args.recipients)
+    recipients = args.recipients
     if 'From' not in message:
         sender = args.r or pwd.getpwuid(os.getuid()).pw_name
         if args.F:
@@ -43,9 +44,34 @@ def sendmail(args):
             message['From'] = sender
 
     if 'To' not in message:
-        raise ValueError("Message doesn't have a To header")
+        raise ValueError("Message doesn't have a To header and no recipients "
+            'given on the command line')
 
-    send_mail(sender, list(recipients), message)
+    if args.t:
+        recipients.extend(extract_recipients_from_to_header(message['To']))
+
+    send_mail(sender, unique(recipients), message)
+
+
+def extract_recipients_from_to_header(to_header):
+    recipients = []
+    address_list, _ = get_address_list(to_header)
+    for address in address_list:
+        if address.token_type != 'address':
+            continue
+        for mailbox in address.all_mailboxes:
+            recipients.append(mailbox.addr_spec)
+    return recipients
+
+
+def unique(iterable):
+    seen = set()
+    ret = []
+    for item in iterable:
+        if not item in seen:
+            ret.append(item)
+            seen.add(item)
+    return ret
 
 
 def read_message(body_type, stop_on_dot):
