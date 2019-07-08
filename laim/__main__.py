@@ -4,7 +4,7 @@ laim to sendmail compatibility interface.
 
 import argparse
 import email.parser
-from email._header_value_parser import get_address_list
+from email.headerregistry import AddressHeader
 import os
 import pwd
 import sys
@@ -55,8 +55,8 @@ def sendmail(args):
 
 def extract_recipients_from_to_header(to_header):
     recipients = []
-    address_list, _ = get_address_list(to_header)
-    for address in address_list:
+    address_header = AddressHeader.value_parser(to_header)
+    for address in address_header:
         if address.token_type != 'address':
             continue
         for mailbox in address.all_mailboxes:
