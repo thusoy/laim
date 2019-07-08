@@ -33,11 +33,11 @@ def main(argv=None):
 
 
 def mailq(prog='mailq'):
-    sys.stderr.write('%s: Mail queue is empty (and not used by laim)\n' % prog)
+    _logger.warning('%s: Mail queue is empty (and not used by laim)', prog)
 
 
 def newaliases(prog='newaliases'):
-    sys.stderr.write('%s: Aliases are not used by laim\n' % prog)
+    _logger.warning('%s: Aliases are not used by laim', prog)
 
 
 def sendmail(args):
