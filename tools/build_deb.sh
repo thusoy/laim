@@ -6,7 +6,7 @@ export DH_VIRTUALENV_INSTALL_ROOT=/opt/venvs
 
 main () {
     clean
-    # create_changelog
+    create_changelog
     get_source
     build_deb
 }
