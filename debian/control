@@ -1,6 +1,6 @@
 Source: laim
-Section: python
-Priority: extra
+Section: mail
+Priority: optional
 Maintainer: Tarjei Husøy <apt@thusoy.com>
 Build-Depends:
     debhelper (>= 9),
@@ -11,14 +11,20 @@ Standards-Version: 3.9.5
 
 Package: laim
 Architecture: any
+Section: mail
+Priority: optional
 Provides: mail-transport-agent
 Conflicts: mail-transport-agent
 Replaces: mail-transport-agent
-Pre-Depends: dpkg (>= 1.16.1), ${misc:Pre-Depends}
 Depends:
     ${python:Depends},
     ${misc:Depends},
     adduser,
     python3
 Description: Local SMTP helper
- Local SMTP helper
+ Laim is a tool to help you deliver messages received over the
+ traditional mail system over alternative distriution channels.
+ Laim can thus help you deliver mail from cron, unattended-upgrades
+ or sudo to your preferred tool for keeping track of system activity,
+ whether that be Slack, log files, sending an SMS, or anything else you
+ can think of. You write the message handling logic yourself in python.
