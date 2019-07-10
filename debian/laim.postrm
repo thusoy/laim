@@ -4,19 +4,14 @@ set -eu
 
 main () {
     remove_config_files
-    if [ "$1" = "purge" ]; then
-        remove_log_files
-    fi
 }
 
 remove_config_files () {
     rm -rf /etc/laim
 }
 
-remove_log_files () {
-    rm -rf /var/log/laim
-}
-
 main "$@"
+
+set +eu
 
 #DEBHELPER#

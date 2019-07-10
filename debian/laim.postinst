@@ -7,7 +7,6 @@ CONF_DIR=/etc/laim
 
 main () {
     create_user
-    create_log_dir
     add_default_config
 }
 
@@ -20,14 +19,6 @@ create_user () {
         --group \
         --quiet \
         laim
-}
-
-create_log_dir () {
-    mkdir -p "$LOG_DIR"
-    touch "$LOG_DIR/laim.log"
-    chmod 640 "$LOG_DIR/"*
-    chown -R laim:adm "$LOG_DIR"
-    chmod 755 "$LOG_DIR"
 }
 
 add_default_config () {
