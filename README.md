@@ -51,12 +51,12 @@ Note that until the line calling `super().__init__()`, the script was running as
 
 ## Async
 
-Laim is not written for high throughput, but does do some basic queuing to make sure you can handle a message synchronously without blocking the reception of other messages. This is done by running the SMTP listener on one thread, and the handler on another. Messages to be delivered are passed to the handler on a bounded in-memory queue, which prevents arbitrarily high memory usage if the handler fails to process messages fast enough by dropping new messages (this event is logged by laim).
+Laim is not written for high throughput, but does do some basic queuing to make sure you can handle a message synchronously without blocking the reception of other messages. This is done by running the SMTP listener on one thread, and the handler on another. Messages to be delivered are passed to the handler on a bounded in-memory queue, which prevents arbitrarily high memory usage if the handler fails to process messages fast enough by dropping new messages (this event is logged by laim). You can configure the max size of the queue by passing `max_queue_size` to the Laim constructor (default is 50).
 
 
 ## Security considerations
 
-Laim will bind to localhost port 25 to handle incoming SMTP, and will by itself only filter out non-plaintext messages. This means that if an attacker gets access to the machine, they can send arbitrary messages to your handler.
+Laim will bind to localhost port 25 to handle SMTP, and will by itself not do any filtering of messages. Since it only binds to localhost there's no extra attack surface for an external attacker, but if an attacker has gotten non-root access to the server they can craft arbitrary messages that will be forwarded to your handler. This could be exploited to send trojans that might get executed by developers on their own machines or similar, thus remain skeptical to any suspicious messages that gets delivered by laim.
 
 The service will start as root, but drops privileges once it has bound to the port and opened a handle to the config file.
 
@@ -71,7 +71,7 @@ To send lots of mail to test the queuing system or simple load testing:
 
     $ count=0; while :; do echo "Sending $count"; sed s/COUNT/$count/ smtp-session.txt | nc localhost 2525 || break; count=$((count+1)); done; echo "Sent $count mails"
 
-Laim stops gracefully on SIGINT and SIGTERM, so you can stop the handler from a third shell and observe that it shuts down cleanly:
+Laim stops gracefully on SIGINT and SIGTERM, so you can stop the handler from a third shell and observe that it shuts down cleanly after having processed all queued messages:
 
     $ pkill -f devhandler.py
 
