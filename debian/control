@@ -13,7 +13,7 @@ Package: laim
 Architecture: any
 Provides: mail-transport-agent
 Conflicts: mail-transport-agent
-Replaes: mail-transport-agent
+Replaces: mail-transport-agent
 Pre-Depends: dpkg (>= 1.16.1), ${misc:Pre-Depends}
 Depends:
     ${python:Depends},
