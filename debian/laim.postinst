@@ -33,7 +33,7 @@ create_log_dir () {
 add_default_config () {
     mkdir -p "$CONF_DIR"
 
-    local config_file="$CONF_DIR/conf.yml"
+    local config_file="$CONF_DIR/config.yml"
     local handler_file="$CONF_DIR/handler.py"
     old_umask=$(umask)
 

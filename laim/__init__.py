@@ -25,7 +25,7 @@ class Laim:
             port=25,
             user='laim',
             max_queue_size=50,
-            config_file='/etc/laim/conf.yml',
+            config_file='/etc/laim/config.yml',
     ):
         self.queue = queue.Queue(max_queue_size)
         self.notifier = sdnotify.SystemdNotifier()
