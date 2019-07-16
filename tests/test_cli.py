@@ -98,6 +98,39 @@ def test_message_without_from_and_with_F_argument():
     ''' % current_user))
 
 
+def test_message_without_to():
+    stdin_mock = mock.Mock()
+    stdin_mock.buffer = [
+        b'Subject: test subject\n',
+        b'\n',
+        b'Message\n',
+    ]
+    with mock.patch('laim.__main__.sys.stdin', stdin_mock):
+        with mock.patch('laim.__main__.send_mail') as send_mail_mock:
+            with pytest.raises(SystemExit):
+                main([])
+
+
+def test_message_without_to_but_with_recipients():
+    stdin_mock = mock.Mock()
+    stdin_mock.buffer = [
+        b'Subject: test subject\n',
+        b'\n',
+        b'Message\n',
+    ]
+    with mock.patch('laim.__main__.sys.stdin', stdin_mock):
+        with mock.patch('laim.__main__.send_mail') as send_mail_mock:
+            main(['foo'])
+
+    current_user = pwd.getpwuid(os.getuid()).pw_name
+    assert_send_mail_called(send_mail_mock, current_user, ['foo'], textwrap.dedent('''\
+        Subject: test subject\r
+        From: %s\r
+        \r
+        Message\r
+    ''' % current_user))
+
+
 @pytest.mark.parametrize('flag', ('-r', '-f'))
 def test_message_without_from_and_with_sender_argument(flag):
     stdin_mock = mock.Mock()

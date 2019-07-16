@@ -55,7 +55,7 @@ def sendmail(args):
         else:
             message['From'] = sender
 
-    if 'To' not in message:
+    if 'To' not in message and not recipients:
         raise ValueError("Message doesn't have a To header and no recipients "
             'given on the command line')
 
