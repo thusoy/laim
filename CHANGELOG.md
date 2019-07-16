@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 
+UNRELEASED -
+------------------
+
+## Fixed
+- sendmail: Allow messages without a To header as long as recipients are given on the command line.
+
+## Changed
+- Set the syslog facility to mail and identifier to laim.
+
+
 0.2.0 - 2019-07-10
 ------------------
 
