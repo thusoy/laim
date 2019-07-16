@@ -9,6 +9,8 @@ Environment=PYTHONUNBUFFERED=1
 Type=notify
 ExecStart=/opt/venvs/laim/bin/python /etc/laim/handler.py
 Restart=on-failure
+SyslogFacility=mail
+SyslogIdentifier=laim
 
 [Install]
 WantedBy=multi-user.target
