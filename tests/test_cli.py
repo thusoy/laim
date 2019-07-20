@@ -1,4 +1,5 @@
 import email.parser
+import email.policy
 import os
 import pwd
 import textwrap
@@ -18,7 +19,7 @@ def test_read_message():
         b'Should be ignored\n',
     ]
     with mock.patch('laim.__main__.sys.stdin', stdin_mock):
-        message = read_message('8BITMIME', stop_on_dot=True)
+        message = read_message(stop_on_dot=True)
 
     assert message.get_payload() == 'Foo content\n'
 
@@ -33,7 +34,7 @@ def test_read_message_ignore_dot():
         b'Should be included\n',
     ]
     with mock.patch('laim.__main__.sys.stdin', stdin_mock):
-        message = read_message('8BITMIME', stop_on_dot=False)
+        message = read_message(stop_on_dot=False)
 
     assert message.get_payload() == 'Foo content\n.\nShould be included\n'
 
@@ -171,10 +172,34 @@ def test_message_extract_recipient():
     '''))
 
 
+def test_quoted_printable_long_subject():
+    stdin_mock = mock.Mock()
+    stdin_mock.buffer = [
+        b'Subject: =?utf-8?q?mail_with_long_long_long_long_long_long_long_long_long_long_long_s?=\n',
+        b' =?utf-8?q?ubject?=\n',
+        b'To: foo\n',
+        b'\n',
+        b'Message\n',
+    ]
+    with mock.patch('laim.__main__.sys.stdin', stdin_mock):
+        with mock.patch('laim.__main__.send_mail') as send_mail_mock:
+            main([])
+
+    current_user = pwd.getpwuid(os.getuid()).pw_name
+    assert_send_mail_called(send_mail_mock, current_user, [], textwrap.dedent('''\
+        Subject: =?utf-8?q?mail_with_long_long_long_long_long_long_long_long_long_long_long_s?=\r
+         =?utf-8?q?ubject?=\r
+        To: foo\r
+        From: %s\r
+        \r
+        Message\r
+    ''' % current_user))
+
+
 def assert_send_mail_called(send_mail_mock, sender, recipients, message_string):
     send_mail_mock.assert_called_with(sender, recipients, mock.ANY)
     sent_message = send_mail_mock.call_args[0][2]
-    assert sent_message.as_string() == message_string
+    assert sent_message.as_string(policy=email.policy.SMTP) == message_string
 
 
 @pytest.mark.parametrize('test_case', [

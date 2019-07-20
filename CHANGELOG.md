@@ -12,6 +12,7 @@ UNRELEASED -
 - `unfold` helper to unfold header values.
 
 ## Fixed
+- Messages with a folded quoted-printable subject wasn't parsed correctly.
 - Long subjects are no longer folded in the log output.
 
 

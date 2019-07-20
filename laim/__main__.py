@@ -45,7 +45,7 @@ def sendmail(args):
         return mailq('sendmail')
     if args.bi:
         return newaliases('sendmail')
-    message = read_message(args.B, args.i)
+    message = read_message(args.i)
     sender = None
     recipients = args.recipients
     if 'From' not in message:
@@ -86,14 +86,13 @@ def unique(iterable):
     return ret
 
 
-def read_message(body_type, stop_on_dot):
+def read_message(stop_on_dot):
     binary_lines = []
     for line in sys.stdin.buffer:
         if stop_on_dot and line == b'.\n':
             break
         binary_lines.append(line)
-    parser_policy = SMTPUTF8 if body_type == '8BITMIME' else SMTP
-    parser = email.parser.BytesParser(policy=parser_policy)
+    parser = email.parser.BytesParser()
     message = parser.parsebytes(b''.join(binary_lines))
     return message
 
@@ -110,8 +109,6 @@ def parse_args(argv=None):
         help='List the mail queue')
     parser.add_argument('-bi', '-I', action='store_true',
         help='Initialize the alias database. Ignored.')
-    parser.add_argument('-B', choices=('7BIT', '8BITMIME'), default='7BIT',
-        help='Set the message body type. Default: %(default)s')
     parser.add_argument('-i', '-oi', action='store_false', default=True,
         help="When reading a message from standard input, don't treat a "
         "line with only a .  character  as the end of input.")
