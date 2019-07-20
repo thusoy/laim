@@ -1,4 +1,5 @@
 import os
+import platform
 import queue
 import re
 import signal
@@ -43,6 +44,7 @@ class Laim:
             'port': port,
             'max_queue_size': max_queue_size,
             'config_file': config_file,
+            'py': platform.python_version(),
         })
 
         with open(config_file, 'r') as config_fh:
