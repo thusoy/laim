@@ -1,5 +1,6 @@
 import os
 import queue
+import re
 import signal
 import threading
 import time
@@ -95,7 +96,7 @@ class Laim:
                 'sender': task_args.sender,
                 'recipients': ','.join(task_args.recipients),
                 'msg_structure': format_message_structure(message),
-                'subject': message.get('subject'),
+                'subject': unfold(message.get('subject')),
                 'msg_defects': ','.join(e.__class__.__name__ for e in message.defects),
             }
             try:
@@ -133,3 +134,10 @@ class LaimHandler:
             return '552 Exceeded storage allocation'
 
         return '250 OK'
+
+
+def unfold(folded):
+    '''Helper to unfold headers'''
+    if folded is None:
+        return None
+    return re.sub(r'\r?\n ', ' ', folded)

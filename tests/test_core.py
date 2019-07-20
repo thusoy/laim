@@ -2,7 +2,9 @@ import asyncio
 from queue import Queue
 from unittest import mock
 
-from laim import Laim, LaimHandler
+import pytest
+
+from laim import Laim, LaimHandler, unfold
 
 
 def test_drops_privileges(temp_config):
@@ -39,3 +41,15 @@ def test_full_queue():
     add_to_queue() == '250 OK'
     add_to_queue() == '250 OK'
     add_to_queue() == '552 Exceeded storage allocation'
+
+
+@pytest.mark.parametrize('testcase', [
+    ('foo\r\n bar', 'foo bar'),
+    ('foo\n bar', 'foo bar'),
+    ('foo\r\n bar\n baz', 'foo bar baz'),
+    ('foo\r\n  bar', 'foo  bar'),
+    (None, None), # convenient to avoid crashing if a header is missing
+])
+def test_unfold(testcase):
+    folded, expected = testcase
+    assert unfold(folded) == expected

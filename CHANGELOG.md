@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 
+UNRELEASED -
+------------------
+
+## Added
+- `unfold` helper to unfold header values.
+
+## Fixed
+- Long subjects are no longer folded in the log output.
+
+
 0.3.0 - 2019-07-16
 ------------------
 
