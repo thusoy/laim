@@ -12,6 +12,9 @@ UNRELEASED -
 - You can now customize some SMTP-related parameters through the `smtp_kwargs` constructor
   argument. See the readme for available keys.
 
+## Fixed
+- A race condition on startup that could lead to SMTP being handled before dropping privileges.
+
 
 0.4.0 - 2019-07-20
 ------------------

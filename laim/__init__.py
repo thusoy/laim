@@ -35,7 +35,13 @@ class Laim:
         self.queue = queue.Queue(max_queue_size)
         self.notifier = sdnotify.SystemdNotifier()
         handler = LaimHandler(self.queue)
-        self.controller = LaimController(handler, port=port, smtp_kwargs=smtp_kwargs)
+        privilege_event = threading.Event()
+        self.controller = LaimController(
+            privilege_event,
+            handler,
+            port=port,
+            smtp_kwargs=smtp_kwargs,
+        )
 
         # Start the controller while we have the privileges to bind the port
         self.controller.start()
@@ -57,6 +63,9 @@ class Laim:
         signal.signal(signal.SIGTERM, self._signalhandler)
         signal.signal(signal.SIGINT, self._signalhandler)
         self.stop_event = threading.Event()
+
+        # Allow client sessions to be created
+        privilege_event.set()
 
 
     def handle_message(self, sender, recipients, message):
@@ -142,9 +151,10 @@ class LaimHandler:
 
 
 class LaimController(Controller):
-    def __init__(self, handler, port, smtp_kwargs=None):
+    def __init__(self, privilege_event, handler, port, smtp_kwargs=None):
         super().__init__(handler, hostname='localhost', port=port)
         self.smtp_kwargs = smtp_kwargs
+        self.privilege_event = privilege_event
 
 
     def factory(self):
@@ -155,7 +165,22 @@ class LaimController(Controller):
         if self.smtp_kwargs:
             kwargs.update(self.smtp_kwargs)
 
-        return SMTP(self.handler, **kwargs)
+        return LaimSMTP(self.privilege_event, self.handler, **kwargs)
+
+
+class LaimSMTP(SMTP):
+    '''
+    Subclass to make sure no sessions are created before we've dropped
+    privileges.
+    '''
+    def __init__(self, privilege_event, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.privilege_event = privilege_event
+
+
+    def _create_session(self):
+        self.privilege_event.wait()
+        return super()._create_session()
 
 
 def unfold(folded):
