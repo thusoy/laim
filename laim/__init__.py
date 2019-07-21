@@ -30,11 +30,12 @@ class Laim:
             user='laim',
             max_queue_size=50,
             config_file='/etc/laim/config.yml',
+            smtp_kwargs=None,
     ):
         self.queue = queue.Queue(max_queue_size)
         self.notifier = sdnotify.SystemdNotifier()
         handler = LaimHandler(self.queue)
-        self.controller = LaimController(handler, port=port)
+        self.controller = LaimController(handler, port=port, smtp_kwargs=smtp_kwargs)
 
         # Start the controller while we have the privileges to bind the port
         self.controller.start()
@@ -141,8 +142,9 @@ class LaimHandler:
 
 
 class LaimController(Controller):
-    def __init__(self, handler, port):
+    def __init__(self, handler, port, smtp_kwargs=None):
         super().__init__(handler, hostname='localhost', port=port)
+        self.smtp_kwargs = smtp_kwargs
 
 
     def factory(self):
@@ -150,6 +152,9 @@ class LaimController(Controller):
             'enable_SMTPUTF8': True,
             'ident': 'laim %s' % __version__,
         }
+        if self.smtp_kwargs:
+            kwargs.update(self.smtp_kwargs)
+
         return SMTP(self.handler, **kwargs)
 
 
