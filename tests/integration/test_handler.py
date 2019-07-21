@@ -13,7 +13,7 @@ def test_handler(temp_config):
             self.stop_event.set()
 
     with mock.patch('laim.drop_privileges'):
-        with mock.patch('laim.Controller'):
+        with mock.patch('laim.LaimController'):
             handler = Handler(config_file=temp_config)
 
     handler.queue.put(TaskArguments(mock.Mock(), [], b''))
@@ -29,7 +29,7 @@ def test_crashing_handler(temp_config):
             raise ValueError()
 
     with mock.patch('laim.drop_privileges'):
-        with mock.patch('laim.Controller'):
+        with mock.patch('laim.LaimController'):
             handler = Handler(config_file=temp_config)
 
     handler.queue.put(TaskArguments(mock.Mock(), [], b''))

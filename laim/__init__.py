@@ -12,9 +12,11 @@ from smtpd import SMTPServer
 import sdnotify
 import yaml
 from aiosmtpd.controller import Controller
+from aiosmtpd.smtp import SMTP
 
 from .util import drop_privileges
 from .log import log, format_message_structure
+from ._version import __version__
 
 
 TaskArguments = namedtuple('TaskArguments', 'sender recipients data')
@@ -32,7 +34,7 @@ class Laim:
         self.queue = queue.Queue(max_queue_size)
         self.notifier = sdnotify.SystemdNotifier()
         handler = LaimHandler(self.queue)
-        self.controller = Controller(handler, hostname='127.0.0.1', port=port)
+        self.controller = LaimController(handler, port=port)
 
         # Start the controller while we have the privileges to bind the port
         self.controller.start()
@@ -136,6 +138,19 @@ class LaimHandler:
             return '552 Exceeded storage allocation'
 
         return '250 OK'
+
+
+class LaimController(Controller):
+    def __init__(self, handler, port):
+        super().__init__(handler, hostname='localhost', port=port)
+
+
+    def factory(self):
+        kwargs = {
+            'enable_SMTPUTF8': True,
+            'ident': 'laim %s' % __version__,
+        }
+        return SMTP(self.handler, **kwargs)
 
 
 def unfold(folded):
