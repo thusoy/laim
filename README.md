@@ -60,6 +60,25 @@ Laim will bind to localhost port 25 to handle SMTP, and will by itself not do an
 
 The service will start as root, but drops privileges once it has bound to the port and opened a handle to the config file.
 
+# Configuring laim
+
+Beyond writing a handler laim doesn't require any configuration. There's a couple of knobs available though:
+
+- **`max_queue_size`**: The max number of outstanding messages held in memory. This multiplied by the data size limit is the max memory usage of the process, if full new messages will be dropped. Default is 50.
+- **`user`**: The user to drop privileges to. Defaults to `laim`, which is created upon installation of the debian package.
+- **`config_file`**: Path to a YAML config file that should be read before dropping privileges. The handler can access this through `self.config`.
+
+All the above are keyword arguments to the Laim constructor.
+
+There's also some SMTP related configuration:
+- **`data_size_limit`**: Max size of a individual message, in bytes. Default is 32MB. Set to 0 to disable the limit.
+- **`ident`**: How the SMTP server identifies itself. Default is `laim <version>`.
+- **`enable_SMTPUTF8`**: Whether to announce support for UTF8 in the SMTP EHLO. Default is `True`.
+- **`hostname`**: The hostname the SMTP server greets clients with. Defaults to the server's FQDN.
+- **`timeout`**: The number of seconds to wait between valid SMTP commands. After this time the connection will be closed by the server. The default is 300 seconds.
+
+The above should be given in the `smtp_kwargs` argument to the Laim constructor, and are forwarded directly to the [aiosmtpd constructor](https://aiosmtpd.readthedocs.io/en/latest/aiosmtpd/docs/smtp.html#SMTP).
+
 
 # Local testing
 

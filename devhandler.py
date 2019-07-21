@@ -15,6 +15,11 @@ def main():
             user=os.getlogin(),
             max_queue_size=5,
             config_file='devconfig.yml',
+            smtp_kwargs={
+                'ident': 'devlaim',
+                'data_size_limit': 0,
+                'hostname': 'devlaim',
+            },
         )
     handler.run()
     print('Exiting after handling %d messages' % handler.count)

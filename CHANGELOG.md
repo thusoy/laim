@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
 
+UNRELEASED -
+------------------
+
+## Added
+- You can now customize some SMTP-related parameters through the `smtp_kwargs` constructor
+  argument. See the readme for available keys.
+
+
 0.4.0 - 2019-07-20
 ------------------
 
