@@ -11,6 +11,7 @@ from email.header import decode_header, make_header
 from smtpd import SMTPServer
 
 import sdnotify
+import setproctitle
 import yaml
 from aiosmtpd.controller import Controller
 from aiosmtpd.smtp import SMTP
@@ -33,6 +34,7 @@ class Laim:
             config_file='/etc/laim/config.yml',
             smtp_kwargs=None,
     ):
+        setproctitle.setproctitle('laim')
         self.queue = queue.Queue(max_queue_size)
         self.notifier = sdnotify.SystemdNotifier()
         handler = LaimHandler(self.queue)
