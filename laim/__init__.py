@@ -7,6 +7,7 @@ import threading
 import time
 from collections import namedtuple
 from email import message_from_string
+from email.header import decode_header, make_header
 from smtpd import SMTPServer
 
 import sdnotify
@@ -113,6 +114,11 @@ class Laim:
                 'subject': unfold(message.get('subject')),
                 'msg_defects': ','.join(e.__class__.__name__ for e in message.defects),
             }
+
+            # Decode the subject to make it easier to consume for handlers
+            if 'subject' in message:
+                message.replace_header('subject', str(make_header(decode_header(message['subject']))))
+
             try:
                 self.handle_message(task_args.sender, task_args.recipients, message)
             except Exception as e:

@@ -43,6 +43,7 @@ def test_sendmail_delivery_to_handler(temp_config):
         stdin_mock.buffer = [
             b'From: foo@bar.com\n',
             b'To: bar@foo.com\n',
+            b'Subject: =?utf-8?q?subject?=\n',
             b'\n',
             b'Hello, laim!\n',
         ]
@@ -61,3 +62,4 @@ def test_sendmail_delivery_to_handler(temp_config):
         assert received_sender == 'foo@bar.com'
         assert received_recipients == ['bar@foo.com']
         assert received_message.get_payload() == 'Hello, laim!'
+        assert received_message.get('subject') == 'subject'
