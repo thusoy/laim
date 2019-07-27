@@ -3,7 +3,9 @@
 set -eu
 
 main () {
-    remove_config_files
+    if [ "$1" = "purge" ]; then
+        remove_config_files
+    fi
 }
 
 remove_config_files () {
