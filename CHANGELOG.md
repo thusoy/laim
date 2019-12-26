@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+UNRELEASED -
+------------------
+
+## Changed
+- The license was changed from MIT to the Hippocratic license to deny use that infringes on the UNs
+  declaration of human rights.
+
 
 0.6.1 - 2019-07-27
 ------------------

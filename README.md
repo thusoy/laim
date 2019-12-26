@@ -95,3 +95,13 @@ Laim stops gracefully on SIGINT and SIGTERM, so you can stop the handler from a 
     $ pkill -f devhandler.py
 
 There are some more example handlers in the [examples/](/examples/) directory.
+
+
+License
+-------
+
+This project uses the [Hippocratic License](https://firstdonoharm.dev/), and is thus freely
+available to use for purposes that do not infringe on the United Nations Universal Declaration of
+Human Rights. Note that the python package is tagged with the MIT trove classifier until PyPI
+supports a trove classifier for the
+Hippocratic License (https://github.com/pypa/warehouse/issues/7157).
