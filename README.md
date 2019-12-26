@@ -60,6 +60,31 @@ Laim will bind to localhost port 25 to handle SMTP, and will by itself not do an
 
 The service will start as root, but drops privileges once it has bound to the port and opened a handle to the config file.
 
+
+# Installation
+
+In decreasing order of stuff you have to do:
+
+* Use the salt state [here](https://github.com/thusoy/salt-states/salt/laim), write a state that
+  deploys your handler, and add any configuration to pillar. If you're using a different
+  automation tool and have written a cookbook/playbook/module/thing for laim, please let me know
+  and I'll add a link to it here!
+
+* Install from my apt repo:
+  ```
+  $ echo "deb https://repo.thusoy.com/apt/debian $(lsb_release -cs) main" | sudo tee -a /etc/apt/sources.list
+  $ curl https://raw.githubusercontent.com/thusoy/repo/master/release-key.asc | sudo apt-key add -
+  $ sudo apt-get update
+  $ sudo apt-get install laim
+  ```
+  Write your handler in `/etc/laim/handler.py`, put any configuration in `/etc/laim/config.yml` and restart the service.
+
+* Build the debian package yourself and upload to your own repo:
+  `./tools/build_deb.sh`
+
+* Install from PyPI and deploy a handler however you prefer.
+
+
 # Configuring laim
 
 Beyond writing a handler laim doesn't require any configuration. There's a couple of knobs available though:
