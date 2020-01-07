@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
-UNRELEASED -
+0.7.0 - 2020-01-07
 ------------------
 
 ## Changed
