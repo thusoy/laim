@@ -11,6 +11,10 @@ UNRELEASED -
 - The license was changed from MIT to the Hippocratic license to deny use that infringes on the UNs
   declaration of human rights.
 
+## Fixed
+- The pip in the installed virtualenv was unusable on buster due to a missing dependency in the
+  debian package.
+
 
 0.6.1 - 2019-07-27
 ------------------

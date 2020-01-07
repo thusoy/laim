@@ -35,6 +35,11 @@ get_source () {
 build_deb () {
     local container_id
     for dist in stretch buster; do
+        if [ "$dist" = "buster" ]; then
+            # Insert python3-distutils as a dependency on buster to avoid a broken virtualenv
+            sed -i.bak 's/^Depends:/Depends:\'$'\n    python3-distutils,/' debian/control
+            rm -f debian/control.bak
+        fi
         cd "$tempdir"
         sed "s/DISTRO/$dist/" Dockerfile-template > "Dockerfile-$dist"
         sudo docker build . -f "Dockerfile-$dist" -t "laim-$dist"
@@ -46,6 +51,7 @@ build_deb () {
         cp dist/*.deb "artifacts/$dist"
         sudo rm -rf dist
         chmod 644 "artifacts/$dist"/*.deb
+        git checkout debian/control
     done
 }
 
