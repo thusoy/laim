@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+UNRELEASED -
+------------------
+
+## Fixed
+- Actually fix the pip issue that was thought fixed in 0.7.0.
+
+
 0.7.0 - 2020-01-07
 ------------------
 
