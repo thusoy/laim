@@ -38,7 +38,6 @@ build_deb () {
         if [ "$dist" = "buster" ]; then
             # Insert python3-distutils as a dependency on buster to avoid a broken virtualenv
             sed -i.bak 's/^Depends:/Depends:\'$'\n    python3-distutils,/' debian/control
-            rm -f debian/control.bak
         fi
         cd "$tempdir"
         sed "s/DISTRO/$dist/" Dockerfile-template > "Dockerfile-$dist"
@@ -51,7 +50,9 @@ build_deb () {
         cp dist/*.deb "artifacts/$dist"
         sudo rm -rf dist
         chmod 644 "artifacts/$dist"/*.deb
-        git checkout debian/control
+        if [ "$dist" = "buster" ]; then
+            mv debian/control.bak debian/control
+        fi
     done
 }
 
