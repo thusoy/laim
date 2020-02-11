@@ -1,5 +1,5 @@
 [Unit]
-Description=Local SMTP helper
+Description=Laim: Local SMTP helper
 After=network-online.target nss-lookup.target
 Wants=network-online.target
 
