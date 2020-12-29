@@ -1,7 +1,6 @@
 import os
 import platform
 import queue
-import re
 import signal
 import threading
 import time
@@ -16,7 +15,7 @@ import yaml
 from aiosmtpd.controller import Controller
 from aiosmtpd.smtp import SMTP
 
-from .util import drop_privileges
+from .util import drop_privileges, unfold
 # before_log is imported here to expose in the external API
 from .log import before_log, log, format_message_structure
 from ._version import __version__
@@ -192,10 +191,3 @@ class LaimSMTP(SMTP):
     def _create_session(self):
         self.privilege_event.wait()
         return super()._create_session()
-
-
-def unfold(folded):
-    '''Helper to unfold headers'''
-    if folded is None:
-        return None
-    return re.sub(r'\r?\n ', ' ', folded)
