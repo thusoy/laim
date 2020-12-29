@@ -122,7 +122,9 @@ class Laim:
                 message.replace_header('subject', str(make_header(decode_header(message['subject']))))
 
             try:
-                self.handle_message(task_args.sender, task_args.recipients, message)
+                handler_context = self.handle_message(task_args.sender, task_args.recipients, message)
+                if handler_context:
+                    log_context.update(handler_context)
             except Exception as e:
                 log_context['action'] = 'handle-message-error'
                 log_context['error'] = e
