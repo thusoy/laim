@@ -17,7 +17,8 @@ from aiosmtpd.controller import Controller
 from aiosmtpd.smtp import SMTP
 
 from .util import drop_privileges
-from .log import log, format_message_structure
+# before_log is imported here to expose in the external API
+from .log import before_log, log, format_message_structure
 from ._version import __version__
 
 

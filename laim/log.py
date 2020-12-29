@@ -3,10 +3,14 @@ import re
 import threading
 import time
 
+from blinker import signal
+
 from ._version import __version__
 
 STDOUT_LOCK = threading.Lock()
 NEEDS_QUOTES_RE = re.compile(r'[\s=]')
+
+before_log = signal('before-log')
 
 
 def log(context, start_time=None):
@@ -16,6 +20,8 @@ def log(context, start_time=None):
         context['duration_ms'] = (time.time() - start_time)*1000
 
     message = format_context(context)
+
+    before_log.send(None, **context)
 
     with STDOUT_LOCK:
         print(message)
