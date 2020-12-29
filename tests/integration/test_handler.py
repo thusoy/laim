@@ -2,7 +2,8 @@ from unittest import mock
 
 import pytest
 
-from laim import Laim, TaskArguments
+from laim import Laim
+from laim.laim import TaskArguments
 
 pytestmark = pytest.mark.integration
 
@@ -12,8 +13,8 @@ def test_handler(temp_config):
         def handle_message(self, sender, recipients, message):
             self.stop_event.set()
 
-    with mock.patch('laim.drop_privileges'):
-        with mock.patch('laim.LaimController'):
+    with mock.patch('laim.laim.drop_privileges'):
+        with mock.patch('laim.laim.LaimController'):
             handler = Handler(config_file=temp_config)
 
     handler.queue.put(TaskArguments(mock.Mock(), [], b''))
@@ -28,8 +29,8 @@ def test_crashing_handler(temp_config):
             self.stop_event.set()
             raise ValueError()
 
-    with mock.patch('laim.drop_privileges'):
-        with mock.patch('laim.LaimController'):
+    with mock.patch('laim.laim.drop_privileges'):
+        with mock.patch('laim.laim.LaimController'):
             handler = Handler(config_file=temp_config)
 
     handler.queue.put(TaskArguments(mock.Mock(), [], b''))

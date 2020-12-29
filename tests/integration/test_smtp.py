@@ -27,7 +27,7 @@ def test_sendmail_delivery_to_handler(temp_config):
             handled_event.set()
             self.stop()
 
-    with mock.patch('laim.drop_privileges'):
+    with mock.patch('laim.laim.drop_privileges'):
         handler = Handler(port=2525, config_file=temp_config)
 
     def start_handler():
