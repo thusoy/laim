@@ -13,7 +13,7 @@ def log(context, start_time=None):
     context['version'] = __version__
 
     if start_time is not None:
-        context['time'] = '%.3fs' % (time.time() - start_time)
+        context['duration_ms'] = (time.time() - start_time)*1000
 
     message = format_context(context)
 
