@@ -7,6 +7,7 @@ from setuptools import setup, find_packages
 
 install_requires = [
     'aiosmtpd>=1.2',
+    'blinker',
     'pyyaml',
     'sdnotify',
     'setproctitle',

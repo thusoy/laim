@@ -1,6 +1,7 @@
 # Used by the debian package. Pinned dependencies for reproducible builds.
 aiosmtpd==1.2
 atpublic==1.0
+blinker==1.4
 pyyaml==5.1.1
 sdnotify==0.3.2
 setproctitle==1.1.10
