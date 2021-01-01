@@ -54,7 +54,7 @@ class Laim:
             'max_queue_size': max_queue_size,
             'config_file': config_file,
             'py': platform.python_version(),
-        })
+        }, sender=self)
 
         with open(config_file, 'r') as config_fh:
             drop_privileges(user)
@@ -125,7 +125,7 @@ class Laim:
                 log_data['action'] = 'handle-message-error'
                 log_data['error'] = ex
             finally:
-                log(log_data, start_time)
+                log(log_data, start_time, sender=self)
 
 
 class LaimHandler:
@@ -147,10 +147,10 @@ class LaimHandler:
         }
         try:
             self.task_queue.put_nowait(TaskArguments(mail_from, recipients, data))
-            log(log_data, start_time)
+            log(log_data, start_time, sender=self)
         except queue.Full:
             log_data['action'] = 'queue-full'
-            log(log_data, start_time)
+            log(log_data, start_time, sender=self)
             return '552 Exceeded storage allocation'
 
         return '250 OK'

@@ -13,7 +13,7 @@ NEEDS_QUOTES_RE = re.compile(r'[\s=]')
 before_log = signal('before-log')
 
 
-def log(context, start_time=None):
+def log(context, start_time=None, sender=None):
     context['version'] = __version__
 
     if start_time is not None:
@@ -21,7 +21,7 @@ def log(context, start_time=None):
 
     message = format_context(context)
 
-    before_log.send(None, **context)
+    before_log.send(sender, log_data=context)
 
     with STDOUT_LOCK:
         print(message)
