@@ -7,5 +7,4 @@
 pylint
 pytest
 pytest-cov
-twine>=2.0.0;python_version>"3.5" # twine 2.0.0 and above not supported on py3.5
-twine<2.0.0;python_version=="3.5"
+twine

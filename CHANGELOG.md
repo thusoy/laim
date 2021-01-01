@@ -7,6 +7,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 UNRELEASED -
 ------------------
 
+## Removed
+- Support for python 3.5.
+
 ## Changed
 - Handlers can now return a dict to add fields to what is logged by the base handler.
 

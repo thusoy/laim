@@ -6,15 +6,11 @@ import re
 from setuptools import setup, find_packages
 
 install_requires = [
-    # 1.2.2 drops support for python 3.5, which is still the default python in
-    # debian oldstable (stretch), drop support for this when bullseye is released.
-    'aiosmtpd==1.2',
-    'atpublic==1.0',
+    'aiosmtpd',
     'blinker',
     'pyyaml',
     'sdnotify',
-    # 1.2 drops support for python 3.5
-    'setproctitle==1.1.10',
+    'setproctitle',
 ]
 
 version_file = os.path.join(os.path.dirname(__file__), 'laim', '_version.py')
@@ -56,12 +52,13 @@ setup(
         # 'Development Status :: 7 - Inactive',
         'Intended Audience :: System Administrators',
         'License :: OSI Approved :: MIT License',
+        'Programming Language :: Python',
         # 'Programming Language :: Python :: 2.6',
         # 'Programming Language :: Python :: 2.7',
         # 'Programming Language :: Python :: 3.3',
         # 'Programming Language :: Python :: 3.4',
+        # 'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
