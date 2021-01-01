@@ -19,7 +19,8 @@ Depends:
     ${python:Depends},
     ${misc:Depends},
     adduser,
-    python3
+    python3,
+    python3-distutils
 Description: Local SMTP helper
  Laim is a tool to help you deliver messages received over the
  traditional mail system over alternative distriution channels.
