@@ -3,10 +3,9 @@ Section: mail
 Priority: optional
 Maintainer: Tarjei Husøy <apt@thusoy.com>
 Build-Depends:
-    debhelper (>= 9),
+    debhelper (>= 9.20160709),
     python3,
-    dh-virtualenv (>= 0.7),
-    dh-systemd (>= 1.5)
+    dh-virtualenv (>= 0.7)
 Standards-Version: 3.9.5
 
 Package: laim

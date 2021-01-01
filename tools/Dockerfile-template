@@ -5,7 +5,6 @@ WORKDIR /build
 RUN apt-get update && apt-get install -y \
     debhelper \
     dh-virtualenv \
-    dh-systemd \
     git \
     python3 \
     python3-dev
