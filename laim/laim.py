@@ -1,4 +1,3 @@
-import os
 import platform
 import queue
 import signal
@@ -7,7 +6,6 @@ import time
 from collections import namedtuple
 from email import message_from_string
 from email.header import decode_header, make_header
-from smtpd import SMTPServer
 
 import sdnotify
 import setproctitle
@@ -90,7 +88,7 @@ class Laim:
         self.stop_event.set()
 
 
-    def _signalhandler(self, signum, frame):
+    def _signalhandler(self, signum, frame): # pylint: disable=unused-argument
         self.stop()
 
 
@@ -106,42 +104,43 @@ class Laim:
             start_time = time.time()
             message_string = task_args.data.decode('utf-8')
             message = message_from_string(message_string)
-            log_context = {
+            subject = message.get('subject')
+            log_data = {
                 'action': 'handle-message',
                 'parse_time': '%.3fs' % (time.time() - start_time),
                 'sender': task_args.sender,
                 'recipients': ','.join(task_args.recipients),
                 'msg_structure': format_message_structure(message),
-                'subject': unfold(message.get('subject')),
+                'subject': unfold(subject),
                 'msg_defects': ','.join(e.__class__.__name__ for e in message.defects),
             }
 
             # Decode the subject to make it easier to consume for handlers
-            if 'subject' in message:
-                message.replace_header('subject', str(make_header(decode_header(message['subject']))))
+            if subject:
+                message.replace_header('subject', str(make_header(decode_header(subject))))
 
             try:
-                handler_context = self.handle_message(task_args.sender, task_args.recipients, message)
-                if handler_context:
-                    log_context.update(handler_context)
-            except Exception as e:
-                log_context['action'] = 'handle-message-error'
-                log_context['error'] = e
+                handler_data = self.handle_message(task_args.sender, task_args.recipients, message)
+                if handler_data:
+                    log_data.update(handler_data)
+            except Exception as ex: # pylint: disable=broad-except
+                log_data['action'] = 'handle-message-error'
+                log_data['error'] = ex
             finally:
-                log(log_context, start_time)
+                log(log_data, start_time)
 
 
 class LaimHandler:
-    def __init__(self, queue):
-        self.queue = queue
+    def __init__(self, task_queue):
+        self.task_queue = task_queue
 
 
-    async def handle_DATA(self, server, session, envelope):
+    async def handle_DATA(self, server, session, envelope): # pylint: disable=invalid-name,unused-argument
         start_time = time.time()
         mail_from = envelope.mail_from
         data = envelope.content
         recipients = envelope.rcpt_tos
-        log_context = {
+        log_data = {
             'action': 'queued-message',
             'mail_from': mail_from,
             'recipients': ','.join(recipients),
@@ -149,11 +148,11 @@ class LaimHandler:
             'client': session.host_name,
         }
         try:
-            self.queue.put_nowait(TaskArguments(mail_from, recipients, data))
-            log(log_context, start_time)
+            self.task_queue.put_nowait(TaskArguments(mail_from, recipients, data))
+            log(log_data, start_time)
         except queue.Full:
-            log_context['action'] = 'queue-full'
-            log(log_context, start_time)
+            log_data['action'] = 'queue-full'
+            log(log_data, start_time)
             return '552 Exceeded storage allocation'
 
         return '250 OK'

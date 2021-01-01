@@ -22,6 +22,8 @@ load-plugins=
 # Disable the message, report, category or checker with the given id(s).
 disable=missing-docstring,
     bad-continuation,
+    too-many-arguments,
+    too-many-locals,
     I
 
 [REPORTS]
