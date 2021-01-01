@@ -1,4 +1,4 @@
-name: Test laim
+name: Test
 
 on: [push]
 

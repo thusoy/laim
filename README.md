@@ -1,6 +1,6 @@
 # Laim (pronounced like lime, anagram of mail)
 
-[![Build Status](https://travis-ci.org/thusoy/laim.svg?branch=master)](https://travis-ci.org/thusoy/laim)
+[![Build Status](https://github.com/thusoy/laim/workflows/Test/badge.svg?branch=master)](https://github.com/thusoy/laim/actions)
 
 Flexible library to handle local SMTP on servers.
 
