@@ -34,7 +34,7 @@ get_source () {
 
 build_deb () {
     local container_id
-    for dist in stretch buster; do
+    for dist in buster; do
         if [ "$dist" = "buster" ]; then
             # Insert python3-distutils as a dependency on buster to avoid a broken virtualenv
             sed -i.bak 's/^Depends:/Depends:\'$'\n    python3-distutils,/' "$tempdir"/debian/control
