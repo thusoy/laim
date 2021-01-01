@@ -11,7 +11,6 @@ import smtplib
 import sys
 import traceback
 from email.headerregistry import AddressHeader
-from email.policy import SMTPUTF8, SMTP
 
 from laim._version import __version__
 
@@ -26,9 +25,9 @@ def main(argv=None):
     args = parse_args(argv)
     try:
         sendmail(args)
-    except Exception as e:
+    except Exception as ex: # pylint: disable=broad-except
         _logger.debug(traceback.format_exc())
-        _logger.warning('Failed to send mail: %s', e)
+        _logger.warning('Failed to send mail: %s', ex)
         sys.exit(1)
 
 
@@ -42,9 +41,13 @@ def newaliases(prog='newaliases'):
 
 def sendmail(args):
     if args.bp:
-        return mailq('sendmail')
+        mailq('sendmail')
+        return
+
     if args.bi:
-        return newaliases('sendmail')
+        newaliases('sendmail')
+        return
+
     message = read_message(args.i)
     sender = None
     recipients = args.recipients

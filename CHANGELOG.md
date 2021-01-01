@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+UNRELEASED -
+------------------
+
+## Removed
+- Support for python 3.5.
+
+## Changed
+- Handlers can now return a dict to add fields to what is logged by the base handler.
+
+## Added
+- Added the blinker signal `laim.before_log` to listen to logging events.
+
+
 0.7.1 - 2020-02-05
 ------------------
 

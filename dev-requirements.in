@@ -1,0 +1,10 @@
+# This file only contains the high-level development dependencies without a
+# pinned version. Use ./tools/refreeze-requirements.sh to generate
+# dev-requirements.txt.
+
+-r requirements.txt
+
+pylint
+pytest
+pytest-cov
+twine
