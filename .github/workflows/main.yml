@@ -26,6 +26,9 @@ jobs:
       - name: Configure
         run: ./configure
 
+      - name: Lint
+        run: ./tools/lint.sh
+
       - name: Test
         run: |
           ./test
