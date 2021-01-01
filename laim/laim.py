@@ -85,6 +85,7 @@ class Laim:
 
 
     def stop(self):
+        self.queue.put(None)
         self.stop_event.set()
 
 
@@ -94,12 +95,9 @@ class Laim:
 
     def _start_worker(self):
         while True:
-            try:
-                task_args = self.queue.get(block=True, timeout=1)
-            except queue.Empty:
-                if self.stop_event.is_set():
-                    break
-                continue
+            task_args = self.queue.get()
+            if task_args is None:
+                break
 
             start_time = time.time()
             message_string = task_args.data.decode('utf-8')

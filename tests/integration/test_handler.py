@@ -11,7 +11,7 @@ pytestmark = pytest.mark.integration
 def test_handler(temp_config):
     class Handler(Laim):
         def handle_message(self, sender, recipients, message):
-            self.stop_event.set()
+            self.stop()
 
     with mock.patch('laim.laim.drop_privileges'):
         with mock.patch('laim.laim.LaimController'):
@@ -26,7 +26,7 @@ def test_handler(temp_config):
 def test_crashing_handler(temp_config):
     class Handler(Laim):
         def handle_message(self, sender, recipients, message):
-            self.stop_event.set()
+            self.stop()
             raise ValueError()
 
     with mock.patch('laim.laim.drop_privileges'):
