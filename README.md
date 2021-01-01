@@ -74,7 +74,7 @@ In decreasing order of stuff you have to do:
 * Install from my apt repo:
   ```
   $ echo "deb https://repo.thusoy.com/apt/debian $(lsb_release -cs) main" | sudo tee -a /etc/apt/sources.list
-  $ curl https://raw.githubusercontent.com/thusoy/repo/master/release-key.asc | sudo apt-key add -
+  $ curl https://raw.githubusercontent.com/thusoy/repo/main/release-key.asc | sudo apt-key add -
   $ sudo apt-get update
   $ sudo apt-get install laim
   ```
