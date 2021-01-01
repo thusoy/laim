@@ -2,4 +2,4 @@
 
 set -e
 
-./venv/bin/pylint --rcfile .pylintrc laim
+./venv/bin/pylint --rcfile .pylintrc laim --jobs 0
