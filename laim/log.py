@@ -19,9 +19,8 @@ def log(context, start_time=None, sender=None):
     if start_time is not None:
         context['duration_ms'] = (time.time() - start_time)*1000
 
-    message = format_context(context)
-
     before_log.send(sender, log_data=context)
+    message = format_context(context)
 
     with STDOUT_LOCK:
         print(message)
