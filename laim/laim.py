@@ -62,9 +62,9 @@ class Laim:
             drop_privileges(user)
             self.config = yaml.safe_load(config_fh)
 
+        self.stop_event = threading.Event()
         signal.signal(signal.SIGTERM, self._signalhandler)
         signal.signal(signal.SIGINT, self._signalhandler)
-        self.stop_event = threading.Event()
 
         # Allow client sessions to be created
         privilege_event.set()
