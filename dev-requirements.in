@@ -1,0 +1,10 @@
+# This file only contains the high-level development dependencies without a
+# pinned version. Use ./tools/refreeze-requirements.sh to generate
+# dev-requirements.txt.
+
+-r requirements.txt
+
+pytest
+pytest-cov
+twine>=2.0.0;python_version>"3.5" # twine 2.0.0 and above not supported on py3.5
+twine<2.0.0;python_version=="3.5"
