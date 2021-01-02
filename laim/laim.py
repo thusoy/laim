@@ -123,7 +123,8 @@ class Laim:
                     log_data.update(handler_data)
             except Exception as ex: # pylint: disable=broad-except
                 log_data['action'] = 'handle-message-error'
-                log_data['error'] = ex
+                log_data['error'] = ex.__class__.__name__
+                log_data['error_msg'] = str(ex)
             finally:
                 log(log_data, start_time, sender=self)
 

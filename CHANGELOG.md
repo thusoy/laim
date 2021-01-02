@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+
+UNRELEASED -
+------------------
+
+### Added
+- More log details if the handler fails to process a message.
+
+
 1.0.0 - 2021-01-01
 ------------------
 
