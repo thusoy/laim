@@ -50,8 +50,6 @@ EOF
 This is the default laim handler implementation. Write your handler here.
 '''
 
-import os
-
 from laim import Laim
 
 
