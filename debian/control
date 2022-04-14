@@ -31,7 +31,7 @@ Depends:
     python3-typing-extensions
 Description: Local SMTP helper
  Laim is a tool to help you deliver messages received over the
- traditional mail system over alternative distriution channels.
+ traditional mail system over alternative distribution channels.
  Laim can thus help you deliver mail from cron, unattended-upgrades
  or sudo to your preferred tool for keeping track of system activity,
  whether that be Slack, log files, sending an SMS, or anything else you
