@@ -5,7 +5,8 @@ Maintainer: Tarjei Husøy <apt@thusoy.com>
 Build-Depends:
     debhelper (>= 9.20160709),
     python3,
-    dh-virtualenv (>= 0.7)
+    dh-python,
+    python3-setuptools
 Standards-Version: 3.9.5
 
 Package: laim
@@ -20,7 +21,14 @@ Depends:
     ${misc:Depends},
     adduser,
     python3,
-    python3-distutils
+    python3-distutils,
+    python3-aiosmtpd,
+    python3-public,
+    python3-blinker,
+    python3-yaml,
+    python3-sdnotify,
+    python3-setproctitle,
+    python3-typing-extensions
 Description: Local SMTP helper
  Laim is a tool to help you deliver messages received over the
  traditional mail system over alternative distriution channels.

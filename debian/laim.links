@@ -1,3 +1,3 @@
-opt/venvs/laim/bin/sendmail usr/sbin/sendmail
-opt/venvs/laim/bin/mailq usr/bin/mailq
-opt/venvs/laim/bin/newaliases usr/bin/newaliases
+usr/share/laim/bin/sendmail usr/sbin/sendmail
+usr/share/laim/bin/mailq usr/bin/mailq
+usr/share/laim/bin/newaliases usr/bin/newaliases
