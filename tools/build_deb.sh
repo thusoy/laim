@@ -17,8 +17,8 @@ clean () {
 
 create_changelog () {
     local author author_email
-    author=$(git config user.name)
-    author_email=$(git config user.email)
+    author=${DEB_AUTHOR:-$(git config user.name)}
+    author_email=${DEB_AUTHOR_EMAIL:-$(git config user.email)}
     ./tools/changelog_to_deb.py CHANGELOG.md laim "$author" "$author_email" \
         > debian/changelog
 }

@@ -41,3 +41,6 @@ jobs:
       - name: Build
         run: |
           ./tools/build_deb.sh
+        env:
+            DEB_AUTHOR: GitHub Actions
+            DEB_AUTHOR_EMAIL: ci@example.com
