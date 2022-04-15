@@ -27,7 +27,7 @@ get_source () {
     tempdir=$(mktemp -d)
     trap 'rm -rf "$tempdir"' INT TERM EXIT
     cp tools/Dockerfile-template setup.py README.md LICENSE "$tempdir"/
-    cp -r laim debian "$tempdir"/
+    cp -r laim tests debian "$tempdir"/
 }
 
 build_deb () {

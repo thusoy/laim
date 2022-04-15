@@ -6,7 +6,8 @@ Build-Depends:
     debhelper (>= 9.20160709),
     python3,
     dh-python,
-    python3-setuptools
+    python3-setuptools,
+    python3-pytest
 Standards-Version: 3.9.5
 
 Package: laim
