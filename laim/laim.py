@@ -102,20 +102,24 @@ class Laim:
             start_time = time.time()
             message_string = task_args.data.decode('utf-8')
             message = message_from_string(message_string)
-            subject = message.get('subject')
+            raw_subject = message.get('subject')
+
+            # Decode the subject to make it easier to consume for handlers
+            decoded_subject = None
+            if raw_subject:
+                decoded_subject = str(make_header(decode_header(raw_subject)))
+                message.replace_header('subject', decoded_subject)
+
             log_data = {
                 'action': 'handle-message',
                 'parse_time': '%.3fs' % (time.time() - start_time),
                 'sender': task_args.sender,
                 'recipients': ','.join(task_args.recipients),
                 'msg_structure': format_message_structure(message),
-                'subject': unfold(subject),
+                'raw_subject': unfold(raw_subject),
+                'decoded_subject': decoded_subject,
                 'msg_defects': ','.join(e.__class__.__name__ for e in message.defects),
             }
-
-            # Decode the subject to make it easier to consume for handlers
-            if subject:
-                message.replace_header('subject', str(make_header(decode_header(subject))))
 
             try:
                 handler_data = self.handle_message(task_args.sender, task_args.recipients, message)
