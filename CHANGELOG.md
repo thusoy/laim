@@ -14,12 +14,6 @@ UNRELEASED -
 
 ### Added
 - ./tools/build_deb.sh now also builds packages for Debian Bullseye.
-
-
-UNRELEASED -
-------------------
-
-### Added
 - Include both raw and undecoded subject in the message logs.
 
 
