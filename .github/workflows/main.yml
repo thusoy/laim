@@ -32,3 +32,15 @@ jobs:
         run: |
           ./test
           ./test -m integration
+
+  debian-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build
+        run: |
+          ./tools/build_deb.sh
+        env:
+            DEB_AUTHOR: GitHub Actions
+            DEB_AUTHOR_EMAIL: ci@example.com

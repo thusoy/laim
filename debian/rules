@@ -1,7 +1,11 @@
 #!/usr/bin/make -f
 
-%:
-	dh $@ --with python-virtualenv,systemd
+export PYBUILD_NAME=laim
+export PYBUILD_INSTALL_ARGS=--install-scripts=/usr/share/laim/bin/
+export PYBUILD_TEST_ARGS=tests/ -m "not integration"
 
-override_dh_virtualenv:
-	dh_virtualenv --setuptools --python /usr/bin/python3
+%:
+	dh $@ --with systemd,python3 --buildsystem=pybuild
+
+override_dh_auto_test:
+	dh_auto_test -- --test-pytest

@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+UNRELEASED -
+------------------
+
+### Changed
+- Debian packaging has been refactored to use native debian dependencies instead of dh-virtualenv.
+  Handlers that need to install dependencies should install these as regular system packages instead
+  of using the venv pip binary to install them.
+
+### Added
+- ./tools/build_deb.sh now also builds packages for Debian Bullseye.
+
 
 UNRELEASED -
 ------------------
