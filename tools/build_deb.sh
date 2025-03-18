@@ -32,7 +32,7 @@ get_source () {
 
 build_deb () {
     local container_id
-    for dist in buster bullseye; do
+    for dist in bullseye bookworm; do
         cd "$tempdir"
         sed "s/DISTRO/$dist/" Dockerfile-template > "Dockerfile-$dist"
         sudo docker build . -f "Dockerfile-$dist" -t "laim-$dist"
