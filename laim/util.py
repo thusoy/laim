@@ -14,7 +14,7 @@ def drop_privileges(user):
 
 
 def unfold(folded):
-    '''Helper to unfold headers'''
+    """Helper to unfold headers"""
     if folded is None:
         return None
-    return re.sub(r'\r?\n ', ' ', folded)
+    return re.sub(r"\r?\n ", " ", folded)

@@ -8,16 +8,16 @@ from blinker import signal
 from ._version import __version__
 
 STDOUT_LOCK = threading.Lock()
-NEEDS_QUOTES_RE = re.compile(r'[\s=]')
+NEEDS_QUOTES_RE = re.compile(r"[\s=]")
 
-before_log = signal('before-log')
+before_log = signal("before-log")
 
 
 def log(context, start_time=None, sender=None):
-    context['version'] = __version__
+    context["version"] = __version__
 
     if start_time is not None:
-        context['duration_ms'] = (time.time() - start_time)*1000
+        context["duration_ms"] = (time.time() - start_time) * 1000
 
     before_log.send(sender, log_data=context)
     message = format_context(context)
@@ -27,22 +27,20 @@ def log(context, start_time=None, sender=None):
 
 
 def format_context(context):
-    return ' '.join(
-        format_key_value_pair(key, val) for (key, val) in context.items()
-    )
+    return " ".join(format_key_value_pair(key, val) for (key, val) in context.items())
 
 
 def format_key_value_pair(key, value):
     if value is None:
-        value = ''
+        value = ""
     elif value is True:
-        value = 'true'
+        value = "true"
     elif value is False:
-        value = 'false'
+        value = "false"
     elif isinstance(value, numbers.Integral):
         value = str(value)
     elif isinstance(value, numbers.Real):
-        value = '%.4f' % value
+        value = "%.4f" % value
     else:
         value = str(value)
 
@@ -51,7 +49,7 @@ def format_key_value_pair(key, value):
     if should_quote:
         value = '"%s"' % value
 
-    return '%s=%s' % (key, value)
+    return "%s=%s" % (key, value)
 
 
 def format_message_structure(message):
@@ -60,15 +58,15 @@ def format_message_structure(message):
 
     ret = []
     ret.append(message.get_content_type())
-    ret.append('(')
+    ret.append("(")
 
     first = True
     for part in message.get_payload():
         if not first:
-            ret.append(', ')
+            ret.append(", ")
         ret.append(format_message_structure(part))
         first = False
 
-    ret.append(')')
+    ret.append(")")
 
-    return ''.join(ret)
+    return "".join(ret)

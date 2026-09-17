@@ -36,7 +36,7 @@ sanity_check () {
 }
 
 bump_version () {
-    echo "__version__ = '$version'" > laim/_version.py
+    echo "__version__ = \"$version\"" > laim/_version.py
 }
 
 patch_changelog () {
