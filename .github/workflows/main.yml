@@ -8,10 +8,9 @@ jobs:
     strategy:
       matrix:
         python-version: [
-          '3.6',
-          '3.7',
-          '3.8',
-          '3.9',
+          '3.11', # bookworm
+          '3.13', # trixie
+          '3.14', # forky
         ]
 
     steps:
