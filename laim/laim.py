@@ -58,7 +58,7 @@ class Laim:
             sender=self,
         )
 
-        with open(config_file, "r") as config_fh:
+        with open(config_file, encoding="utf-8") as config_fh:
             drop_privileges(user)
             self.config = yaml.safe_load(config_fh)
 
@@ -109,7 +109,7 @@ class Laim:
 
             log_data = {
                 "action": "handle-message",
-                "parse_time": "%.3fs" % (time.time() - start_time),
+                "parse_time": f"{time.time() - start_time:.3f}s",
                 "sender": task_args.sender,
                 "recipients": ",".join(task_args.recipients),
                 "msg_structure": format_message_structure(message),
@@ -170,7 +170,7 @@ class LaimController(Controller):
     def factory(self):
         kwargs = {
             "enable_SMTPUTF8": True,
-            "ident": "laim %s" % __version__,
+            "ident": f"laim {__version__}",
         }
         if self.smtp_kwargs:
             kwargs.update(self.smtp_kwargs)

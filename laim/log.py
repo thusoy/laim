@@ -40,16 +40,16 @@ def format_key_value_pair(key, value):
     elif isinstance(value, numbers.Integral):
         value = str(value)
     elif isinstance(value, numbers.Real):
-        value = "%.4f" % value
+        value = f"{value:.4f}"
     else:
         value = str(value)
 
     should_quote = NEEDS_QUOTES_RE.search(value)
 
     if should_quote:
-        value = '"%s"' % value
+        value = f'"{value}"'
 
-    return "%s=%s" % (key, value)
+    return f"{key}={value}"
 
 
 def format_message_structure(message):

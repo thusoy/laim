@@ -54,7 +54,7 @@ def sendmail(args):
     if "From" not in message:
         sender = args.r or pwd.getpwuid(os.getuid()).pw_name
         if args.F:
-            message["From"] = '"%s" <%s>' % (args.F, sender)
+            message["From"] = f'"{args.F}" <{sender}>'
         else:
             message["From"] = sender
 
