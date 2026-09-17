@@ -28,6 +28,9 @@ jobs:
       - name: Lint
         run: ./tools/lint.sh
 
+      - name: Check formatting
+        run: ./venv/bin/black --check --diff .
+
       - name: Test
         run: |
           ./test

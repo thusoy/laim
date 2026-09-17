@@ -16,6 +16,8 @@ attrs==26.1.0
     # via
     #   -r requirements.txt
     #   aiosmtpd
+black==26.5.1
+    # via -r dev-requirements.in
 blinker==1.9.0
     # via
     #   -r requirements.txt
@@ -24,6 +26,8 @@ certifi==2026.7.22
     # via requests
 charset-normalizer==3.5.1
     # via requests
+click==8.5.0
+    # via black
 coverage==7.16.1
     # via pytest-cov
 dill==0.4.1
@@ -57,15 +61,22 @@ more-itertools==11.1.0
     #   jaraco-classes
     #   jaraco-functools
 mypy-extensions==1.1.0
-    # via isort
+    # via
+    #   black
+    #   isort
 nh3==0.3.7
     # via readme-renderer
 packaging==26.3
     # via
+    #   black
     #   pytest
     #   twine
+pathspec==1.1.1
+    # via black
 platformdirs==4.11.8
-    # via pylint
+    # via
+    #   black
+    #   pylint
 pluggy==1.6.0
     # via
     #   pytest
@@ -83,6 +94,8 @@ pytest==9.1.1
     #   pytest-cov
 pytest-cov==7.1.0
     # via -r dev-requirements.in
+pytokens==0.4.1
+    # via black
 pyyaml==6.0.3
     # via
     #   -r requirements.txt
