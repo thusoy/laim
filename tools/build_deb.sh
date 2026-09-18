@@ -32,17 +32,17 @@ get_source () {
 
 build_deb () {
     local container_id
-    for dist in bullseye bookworm; do
+    for dist in bookworm trixie; do
         cd "$tempdir"
         sed "s/DISTRO/$dist/" Dockerfile-template > "Dockerfile-$dist"
-        sudo docker build . -f "Dockerfile-$dist" -t "laim-$dist"
-        sudo docker run "laim-$dist"
+        docker build . -f "Dockerfile-$dist" -t "laim-$dist"
+        docker run "laim-$dist"
         cd -
-        container_id=$(sudo docker ps -qla)
-        sudo docker cp "$container_id:/build/dist" .
+        container_id=$(docker ps -qla)
+        docker cp "$container_id:/build/dist" .
         mkdir -p "artifacts/$dist"
         cp dist/*.deb "artifacts/$dist"
-        sudo rm -rf dist
+        rm -rf dist
         chmod 644 "artifacts/$dist"/*.deb
     done
 }

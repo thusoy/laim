@@ -1,3 +1,9 @@
 #!/bin/sh
 
+# Formats the code with black before running the tests. CI runs `black --check`
+# instead, so anything this reformats needs to be committed.
+
+set -e
+
+./venv/bin/black --check .
 ./venv/bin/py.test tests/ -m 'not integration' "$@"

@@ -1,9 +1,11 @@
 # This file only contains the high-level development dependencies without a
-# pinned version. Use ./tools/refreeze-requirements.sh to generate
-# dev-requirements.txt.
+# pinned version. Regenerate dev-requirements.txt with the command recorded
+# in its header:
+#   uv pip compile dev-requirements.in --python-version=3.13 --output-file=dev-requirements.txt
 
 -r requirements.txt
 
+black
 pylint
 pytest
 pytest-cov
