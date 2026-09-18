@@ -57,36 +57,11 @@ def test_message_parsing():
         None,
         [],
         textwrap.dedent("""\
-        From: foo\r
-        To: bar\r
-        \r
-        Message\r
+        From: foo
+        To: bar
+
+        Message
     """),
-    )
-
-
-def test_message_without_from_and_with_F_argument():
-    stdin_mock = mock.Mock()
-    stdin_mock.buffer = [
-        b"To: bar\n",
-        b"\n",
-        b"Message\n",
-    ]
-    with mock.patch("laim.__main__.sys.stdin", stdin_mock):
-        with mock.patch("laim.__main__.send_mail") as send_mail_mock:
-            main(["-F", "foo name"])
-
-    current_user = pwd.getpwuid(os.getuid()).pw_name
-    assert_send_mail_called(
-        send_mail_mock,
-        current_user,
-        None,
-        textwrap.dedent("""\
-        To: bar\r
-        From: "foo name" <%s>\r
-        \r
-        Message\r
-    """ % current_user),
     )
 
 
@@ -107,10 +82,10 @@ def test_message_without_from_and_with_F_argument():
         current_user,
         [],
         textwrap.dedent("""\
-        To: bar\r
-        From: "foo name" <%s>\r
-        \r
-        Message\r
+        To: bar
+        From: "foo name" <%s>
+
+        Message
     """ % current_user),
     )
 
@@ -145,10 +120,10 @@ def test_message_without_to_but_with_recipients():
         current_user,
         ["foo"],
         textwrap.dedent("""\
-        Subject: test subject\r
-        From: %s\r
-        \r
-        Message\r
+        Subject: test subject
+        From: %s
+
+        Message
     """ % current_user),
     )
 
@@ -170,10 +145,10 @@ def test_message_without_from_and_with_sender_argument(flag):
         "foo",
         [],
         textwrap.dedent("""\
-        To: bar\r
-        From: foo\r
-        \r
-        Message\r
+        To: bar
+        From: foo
+
+        Message
     """),
     )
 
@@ -195,10 +170,10 @@ def test_message_extract_recipient():
         None,
         ["baz", "foo", "bar"],
         textwrap.dedent("""\
-        From: foo\r
-        To: bar, foo\r
-        \r
-        Message\r
+        From: foo
+        To: bar, foo
+
+        Message
     """),
     )
 
@@ -222,12 +197,12 @@ def test_quoted_printable_long_subject():
         current_user,
         [],
         textwrap.dedent("""\
-        Subject: =?utf-8?q?mail_with_long_long_long_long_long_long_long_long_long_long_long_s?=\r
-         =?utf-8?q?ubject?=\r
-        To: foo\r
-        From: %s\r
-        \r
-        Message\r
+        Subject: =?utf-8?q?mail_with_long_long_long_long_long_long_long_long_long_long_long_s?=
+         =?utf-8?q?ubject?=
+        To: foo
+        From: %s
+
+        Message
     """ % current_user),
     )
 
@@ -235,7 +210,11 @@ def test_quoted_printable_long_subject():
 def assert_send_mail_called(send_mail_mock, sender, recipients, message_string):
     send_mail_mock.assert_called_with(sender, recipients, mock.ANY)
     sent_message = send_mail_mock.call_args[0][2]
-    assert sent_message.as_string(policy=email.policy.SMTP) == message_string
+    # The SMTP policy emits CRLF line endings. The expected messages are written with
+    # plain newlines since textwrap.dedent on Python 3.14+ strips whitespace-only lines,
+    # which would eat a bare \r on the blank line separating headers from the body.
+    expected = message_string.replace("\n", "\r\n")
+    assert sent_message.as_string(policy=email.policy.SMTP) == expected
 
 
 @pytest.mark.parametrize(

@@ -34,15 +34,13 @@ def test_full_queue():
     handler = LaimHandler(queue)
     envelope = mock.MagicMock()
     envelope.rcpt_tos = ["foo"]
-    loop = asyncio.get_event_loop()
-    run = loop.run_until_complete
 
     def add_to_queue():
-        return run(handler.handle_DATA(None, mock.Mock(), envelope))
+        return asyncio.run(handler.handle_DATA(None, mock.Mock(), envelope))
 
-    add_to_queue() == "250 OK"
-    add_to_queue() == "250 OK"
-    add_to_queue() == "552 Exceeded storage allocation"
+    assert add_to_queue() == "250 OK"
+    assert add_to_queue() == "250 OK"
+    assert add_to_queue() == "552 Exceeded storage allocation"
 
 
 @pytest.mark.parametrize(
